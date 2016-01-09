@@ -50,3 +50,6 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file2][1].line, 4)
         self.assertEqual(errors[file2][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
+
+if __name__ == '__main__':
+    unittest.main()
