@@ -105,7 +105,9 @@ def generate_test_suite(errors, output_file):
                                    'error',
                                    file=os.path.relpath(error.file),
                                    line=str(error.line),
-                                   message='{}: {}'.format(error.line, error.message))
+                                   message='{}: ({}) {}'.format(error.line,
+                                                                error.severity,
+                                                                error.message))
 
     tree = ElementTree.ElementTree(test_suite)
     tree.write(output_file, encoding='utf-8', xml_declaration=True)
