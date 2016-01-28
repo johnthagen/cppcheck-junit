@@ -38,6 +38,11 @@ Convert it to JUnit XML format:
 Releases
 --------
 
+0.2.0 - 2016-01-28
+^^^^^^^^^^^^^^^^^^
+
+Added severity to JUnit message, improved help description, handle XML parsing errors.
+
 0.1.0 - 2015-11-15
 ^^^^^^^^^^^^^^^^^^
 
