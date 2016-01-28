@@ -3,6 +3,7 @@
 """cppcheck-junit tests."""
 
 import unittest
+from xml.etree import ElementTree
 
 from cppcheck_junit import parse_cppcheck
 
@@ -50,6 +51,19 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file2][1].line, 4)
         self.assertEqual(errors[file2][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
+
+    def test_xml_version_1(self):
+        with self.assertRaises(ValueError):
+            parse_cppcheck('tests/cppcheck-out-bad-xml-version-1.xml')
+
+    def test_file_not_found(self):
+        with self.assertRaises(FileNotFoundError):
+            parse_cppcheck('tests/file_does_not_exist.xml')
+
+    def test_malformed(self):
+        with self.assertRaises(ElementTree.ParseError):
+            parse_cppcheck('tests/cppcheck-out-malformed.xml')
+
 
 if __name__ == '__main__':
     unittest.main()

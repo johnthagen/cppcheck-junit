@@ -56,12 +56,15 @@ def parse_cppcheck(file_name):
         Dict[str, List[CppcheckError]]: Parsed errors grouped by file name.
 
     Raises:
+        FileNotFoundError: If file_name does not exist.
+        xml.etree.ElementTree.ParseError: If file_name is not a valid XML file.
         ValueError: If unsupported Cppcheck XML version.
     """
     root = ElementTree.parse(file_name).getroot()  # type: ElementTree.Element
 
-    if not int(root.get('version')) == 2:
-        raise ValueError('Parser only supports Cppcheck XML version 2.  Use --xml-version=2')
+    if (root.get('version') is None or
+       int(root.get('version')) != 2):
+        raise ValueError('Parser only supports Cppcheck XML version 2.  Use --xml-version=2.')
 
     error_root = root.find('errors')
 
@@ -123,8 +126,15 @@ def main():
 
     try:
         errors = parse_cppcheck(args.input_file)
+    except ValueError as e:
+        print(str(e))
+        return EXIT_FAILURE
     except FileNotFoundError as e:
         print(str(e))
+        return EXIT_FAILURE
+    except ElementTree.ParseError as e:
+        print('{} is a malformed XML file. Did you use --xml-version=2?\n{}'.format(
+            args.input_file, e))
         return EXIT_FAILURE
 
     if len(errors) > 0:
