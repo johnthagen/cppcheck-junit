@@ -35,8 +35,12 @@ class CppcheckError(object):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Converts Cppcheck XML version 2 to JUnit XML '
-                                                 'format.')
+    parser = argparse.ArgumentParser(
+        description='Converts Cppcheck XML version 2 to JUnit XML format.\n'
+                    'Usage:\n'
+                    '\t$ cppcheck --xml-version=2 --enable=all . 2> cppcheck-result.xml\n'
+                    '\t$ cppcheck_junit cppcheck-result.xml cppcheck-junit.xml\n',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('input_file', type=str, help='Cppcheck XML version 2 stderr file.')
     parser.add_argument('output_file', type=str, help='JUnit XML output file.')
     return parser.parse_args()
