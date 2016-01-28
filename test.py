@@ -14,17 +14,17 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors, {})
 
     def test_bad(self):
-        file = 'bad.cpp'
+        file1 = 'bad.cpp'
         errors = parse_cppcheck('tests/cppcheck-out-bad.xml')
 
-        self.assertEqual(errors[file][0].file, file)
-        self.assertEqual(errors[file][0].line, 4)
-        self.assertEqual(errors[file][0].message,
+        self.assertEqual(errors[file1][0].file, file1)
+        self.assertEqual(errors[file1][0].line, 4)
+        self.assertEqual(errors[file1][0].message,
                          "Variable 'a' is assigned a value that is never used.")
 
-        self.assertEqual(errors[file][1].file, file)
-        self.assertEqual(errors[file][1].line, 4)
-        self.assertEqual(errors[file][1].message,
+        self.assertEqual(errors[file1][1].file, file1)
+        self.assertEqual(errors[file1][1].line, 4)
+        self.assertEqual(errors[file1][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
 
     def test_all(self):
