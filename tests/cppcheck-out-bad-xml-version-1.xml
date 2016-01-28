@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results>
+    <error file="bad.cpp" line="4" id="unreadVariable" severity="style" msg="Variable &apos;a&apos; is assigned a value that is never used."/>
+    <error file="bad.cpp" line="4" id="arrayIndexOutOfBounds" severity="error" msg="Array &apos;a[10]&apos; accessed at index 10, which is out of bounds."/>
+</results>
