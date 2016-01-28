@@ -56,7 +56,7 @@ def parse_cppcheck(file_name):
         Dict[str, List[CppcheckError]]: Parsed errors grouped by file name.
 
     Raises:
-        FileNotFoundError: If file_name does not exist.
+        IOError: If file_name does not exist (More specifically, FileNotFoundError on Python 3).
         xml.etree.ElementTree.ParseError: If file_name is not a valid XML file.
         ValueError: If unsupported Cppcheck XML version.
     """
@@ -129,7 +129,7 @@ def main():
     except ValueError as e:
         print(str(e))
         return EXIT_FAILURE
-    except FileNotFoundError as e:
+    except IOError as e:
         print(str(e))
         return EXIT_FAILURE
     except ElementTree.ParseError as e:

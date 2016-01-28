@@ -57,7 +57,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
             parse_cppcheck('tests/cppcheck-out-bad-xml-version-1.xml')
 
     def test_file_not_found(self):
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IOError):
             parse_cppcheck('tests/file_does_not_exist.xml')
 
     def test_malformed(self):
