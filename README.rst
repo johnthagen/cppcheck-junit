@@ -7,7 +7,7 @@ cppcheck JUnit Converter
 .. image:: https://travis-ci.org/johnthagen/cppcheck-junit.svg
     :target: https://travis-ci.org/johnthagen/cppcheck-junit
 
-Tool that converts `cppcheck <http://cppcheck.sourceforge.net/>`_ output to JUnit XML format.
+Tool that converts `cppcheck <http://cppcheck.sourceforge.net/>`_ XML output to JUnit XML format.
 Use on your CI servers to get more helpful feedback.
 
 Installation
