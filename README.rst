@@ -22,7 +22,7 @@ Use on your CI servers to get more helpful feedback.
 Installation
 ------------
 
-You can  install, upgrade, and uninstall ``cppcheck-junit`` with these commands:
+You can install, upgrade, and uninstall ``cppcheck-junit`` with these commands:
 
 .. code:: shell-session
 
