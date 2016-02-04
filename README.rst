@@ -7,8 +7,8 @@ cppcheck JUnit Converter
 .. image:: https://coveralls.io/repos/github/johnthagen/cppcheck-junit/badge.svg
     :target: https://coveralls.io/github/johnthagen/cppcheck-junit
 
-.. image:: https://img.shields.io/pypi/v/coveralls.svg
-    :target: https://pypi.python.org/pypi/coveralls
+.. image:: https://img.shields.io/pypi/v/cppcheck-junit.svg
+    :target: https://pypi.python.org/pypi/cppcheck-junit
 
 .. image:: https://img.shields.io/pypi/pyversions/cppcheck-junit.svg
     :target: https://pypi.python.org/pypi/cppcheck-junit/
