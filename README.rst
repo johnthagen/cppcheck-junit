@@ -4,7 +4,7 @@ cppcheck JUnit Converter
 .. image:: https://travis-ci.org/johnthagen/cppcheck-junit.svg
     :target: https://travis-ci.org/johnthagen/cppcheck-junit
 
-.. image:: https://coveralls.io/repos/github/johnthagen/cppcheck-junit/badge.svg?
+.. image:: https://coveralls.io/repos/github/johnthagen/cppcheck-junit/badge.svg
     :target: https://coveralls.io/github/johnthagen/cppcheck-junit
 
 .. image:: https://img.shields.io/pypi/v/coveralls.svg
