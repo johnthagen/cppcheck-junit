@@ -5,7 +5,7 @@
 import unittest
 from xml.etree import ElementTree
 
-from cppcheck_junit import parse_cppcheck
+from cppcheck_junit import CppcheckError, generate_test_suite, parse_cppcheck
 
 
 class ParseCppcheckTestCase(unittest.TestCase):
@@ -63,6 +63,30 @@ class ParseCppcheckTestCase(unittest.TestCase):
     def test_malformed(self):
         with self.assertRaises(ElementTree.ParseError):
             parse_cppcheck('tests/cppcheck-out-malformed.xml')
+
+
+class GenerateTestSuiteTestCase(unittest.TestCase):
+    def test_single(self):
+        errors = {'file_name':
+                  [CppcheckError('file_name',
+                                 4,
+                                 'error message',
+                                 'severity',
+                                 'error_id',
+                                 'verbose error message')]}
+        tree = generate_test_suite(errors)
+        root = tree.getroot()
+        self.assertEqual(root.get('errors'), str(1))
+        self.assertEqual(root.get('failures'), str(0))
+        self.assertEqual(root.get('tests'), str(1))
+
+        test_case_element = root.find('testcase')
+        self.assertEqual(test_case_element.get('name'), 'file_name')
+
+        error_element = test_case_element.find('error')
+        self.assertEqual(error_element.get('file'), 'file_name')
+        self.assertEqual(error_element.get('line'), str(4))
+        self.assertEqual(error_element.get('message'), '4: (severity) error message')
 
 
 if __name__ == '__main__':

@@ -82,15 +82,14 @@ def parse_cppcheck(file_name):
     return errors
 
 
-def generate_test_suite(errors, output_file):
-    """Writes a JUnit test file from parsed Cppcheck errors.
+def generate_test_suite(errors):
+    """Converts parsed Cppcheck errors into JUnit XML tree.
 
     Args:
         errors (Dict[str, List[CppcheckError]]):
-        output_file (str): File path to create JUnit XML file.
 
     Returns:
-        Nothing.
+        ElementTree.ElementTree: XML test suite.
     """
     test_suite = ElementTree.Element('testsuite')
     test_suite.attrib['errors'] = str(len(errors))
@@ -112,8 +111,7 @@ def generate_test_suite(errors, output_file):
                                                                 error.severity,
                                                                 error.message))
 
-    tree = ElementTree.ElementTree(test_suite)
-    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    return ElementTree.ElementTree(test_suite)
 
 
 def main():
@@ -138,7 +136,8 @@ def main():
         return EXIT_FAILURE
 
     if len(errors) > 0:
-        generate_test_suite(errors, args.output_file)
+        tree = generate_test_suite(errors)
+        tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
 
     return EXIT_SUCCESS
 
