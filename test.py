@@ -3,9 +3,10 @@
 """cppcheck-junit tests."""
 
 import unittest
+import sys
 from xml.etree import ElementTree
 
-from cppcheck_junit import CppcheckError, generate_test_suite, parse_cppcheck
+from cppcheck_junit import CppcheckError, generate_test_suite, parse_arguments, parse_cppcheck
 
 
 class ParseCppcheckTestCase(unittest.TestCase):
@@ -88,6 +89,17 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
         self.assertEqual(error_element.get('line'), str(4))
         self.assertEqual(error_element.get('message'), '4: (severity) error message')
 
+
+class ParseArgumentsTestCase(unittest.TestCase):
+    def test_no_arguments(self):
+        with self.assertRaises(SystemExit):
+            # Suppress argparse stderr.
+            class NullWriter:
+                def write(self, s):
+                    pass
+
+            sys.stderr = NullWriter()
+            parse_arguments()
 
 if __name__ == '__main__':
     unittest.main()
