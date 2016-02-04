@@ -13,9 +13,6 @@ cppcheck JUnit Converter
 .. image:: https://img.shields.io/pypi/dd/cppcheck-junit.svg
     :target: https://pypi.python.org/pypi/cppcheck-junit/
 
-.. image:: https://img.shields.io/pypi/dd/coveralls.svg
-    :target: https://pypi.python.org/pypi/coveralls/
-
 Tool that converts `cppcheck <http://cppcheck.sourceforge.net/>`_ XML output to JUnit XML format.
 Use on your CI servers to get more helpful feedback.
 
