@@ -8,7 +8,7 @@ import os
 import sys
 from xml.etree import ElementTree
 
-__version__ = '0.2.0'
+__version__ = '1.0.0'
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = -1
