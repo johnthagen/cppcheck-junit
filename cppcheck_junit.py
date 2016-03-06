@@ -114,7 +114,7 @@ def generate_test_suite(errors):
     return ElementTree.ElementTree(test_suite)
 
 
-def main():
+def main():  # pragma: no cover
     """Main function.
 
     Returns:
@@ -141,5 +141,5 @@ def main():
 
     return EXIT_SUCCESS
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     sys.exit(main())
