@@ -35,7 +35,8 @@ You can install, upgrade, and uninstall ``cppcheck-junit`` with these commands:
 
 Usage
 -----
-Enable XML version 2 output, enable all message, and redirect ``cppcheck`` ``stderr`` to a file:
+Enable XML version 2 output, enable additional rules (for example ``all``), and redirect
+``cppcheck`` ``stderr`` to a file:
 
 .. code:: shell-session
 
