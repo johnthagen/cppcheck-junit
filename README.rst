@@ -4,6 +4,12 @@ cppcheck JUnit Converter
 .. image:: https://travis-ci.org/johnthagen/cppcheck-junit.svg
     :target: https://travis-ci.org/johnthagen/cppcheck-junit
 
+.. image:: https://codeclimate.com/github/johnthagen/cppcheck-junit/badges/gpa.svg
+   :target: https://codeclimate.com/github/johnthagen/cppcheck-junit
+
+.. image:: https://codeclimate.com/github/johnthagen/cppcheck-junit/badges/issue_count.svg
+   :target: https://codeclimate.com/github/johnthagen/cppcheck-junit
+
 .. image:: https://codecov.io/github/johnthagen/cppcheck-junit/coverage.svg
     :target: https://codecov.io/github/johnthagen/cppcheck-junit
 
