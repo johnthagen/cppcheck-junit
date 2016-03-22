@@ -4,6 +4,7 @@
 
 import argparse
 import collections
+from typing import Dict, List
 import os
 import sys
 from xml.etree import ElementTree
@@ -15,16 +16,24 @@ EXIT_FAILURE = -1
 
 
 class CppcheckError(object):
-    def __init__(self, file, line, message, severity, error_id, verbose):
+    def __init__(self,
+                 file,  # type: str
+                 line,  # type: int
+                 message,  # type: str
+                 severity,  # type: str
+                 error_id,  # type: str
+                 verbose  # type: str
+                 ):
+        # type: () -> CppcheckError
         """Constructor.
 
         Args:
-            file (str): File error originated on.
-            line (int): Line error originated on.
-            message (str): Error message.
-            severity (str): Severity of the error.
-            error_id (str): Unique identifier for the error.
-            verbose (str): Verbose error message.
+            file: File error originated on.
+            line: Line error originated on.
+            message: Error message.
+            severity: Severity of the error.
+            error_id: Unique identifier for the error.
+            verbose: Verbose error message.
         """
         self.file = file
         self.line = line
@@ -35,6 +44,7 @@ class CppcheckError(object):
 
 
 def parse_arguments():
+    # type: () -> argparse.Namespace
     parser = argparse.ArgumentParser(
         description='Converts Cppcheck XML version 2 to JUnit XML format.\n'
                     'Usage:\n'
@@ -47,13 +57,14 @@ def parse_arguments():
 
 
 def parse_cppcheck(file_name):
+    # type: (str) -> Dict[str, List[CppcheckError]]
     """Parses a Cppcheck XML version 2 file.
 
     Args:
-        file_name (str): Cppcheck XML file.
+        file_name: Cppcheck XML file.
 
     Returns:
-        Dict[str, List[CppcheckError]]: Parsed errors grouped by file name.
+        Parsed errors grouped by file name.
 
     Raises:
         IOError: If file_name does not exist (More specifically, FileNotFoundError on Python 3).
@@ -83,13 +94,14 @@ def parse_cppcheck(file_name):
 
 
 def generate_test_suite(errors):
+    # type: (Dict[str, List[CppcheckError]]) -> ElementTree.ElementTree
     """Converts parsed Cppcheck errors into JUnit XML tree.
 
     Args:
-        errors (Dict[str, List[CppcheckError]]):
+        errors: Parsed cppcheck errors.
 
     Returns:
-        ElementTree.ElementTree: XML test suite.
+        XML test suite.
     """
     test_suite = ElementTree.Element('testsuite')
     test_suite.attrib['errors'] = str(len(errors))
@@ -115,10 +127,11 @@ def generate_test_suite(errors):
 
 
 def main():  # pragma: no cover
+    # type: () -> int
     """Main function.
 
     Returns:
-        int: Exit code.
+        Exit code.
     """
     args = parse_arguments()
 

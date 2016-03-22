@@ -17,6 +17,7 @@ setup(
     license='MIT',
 
     py_modules=['cppcheck_junit'],
+    install_requires=open('requirements.txt').readlines(),
     zip_safe=False,
 
     classifiers=[
