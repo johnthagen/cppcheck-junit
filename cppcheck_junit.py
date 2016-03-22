@@ -24,7 +24,7 @@ class CppcheckError(object):
                  error_id,  # type: str
                  verbose  # type: str
                  ):
-        # type: () -> CppcheckError
+        # type: (...) -> CppcheckError
         """Constructor.
 
         Args:
