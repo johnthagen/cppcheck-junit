@@ -10,6 +10,6 @@ install:
 before_script:
   flake8 --max-line-length=99
 script:
-  coverage run test.py
+  python -Werror -m coverage run test.py
 after_success:
   codecov
