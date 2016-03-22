@@ -4,7 +4,7 @@
 
 import argparse
 import collections
-from typing import Dict, List
+from typing import Dict, List  # noqa
 import os
 import sys
 from xml.etree import ElementTree
