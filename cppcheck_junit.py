@@ -9,8 +9,6 @@ import os
 import sys
 from xml.etree import ElementTree
 
-__version__ = '1.0.0'
-
 EXIT_SUCCESS = 0
 EXIT_FAILURE = -1
 
@@ -126,6 +124,18 @@ def generate_test_suite(errors):
     return ElementTree.ElementTree(test_suite)
 
 
+def generate_single_success_test_suite():
+    # type: () -> ElementTree.ElementTree
+    """Generates a single successful JUnit XML testcase."""
+    test_suite = ElementTree.Element('testsuite')
+    test_suite.attrib['name'] = 'Cppcheck errors'
+    test_suite.attrib['tests'] = str(1)
+    ElementTree.SubElement(test_suite,
+                           'testcase',
+                           name='Cppcheck success')
+    return ElementTree.ElementTree(test_suite)
+
+
 def main():  # pragma: no cover
     # type: () -> int
     """Main function.
@@ -150,7 +160,9 @@ def main():  # pragma: no cover
 
     if len(errors) > 0:
         tree = generate_test_suite(errors)
-        tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
+    else:
+        tree = generate_single_success_test_suite()
+    tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
 
     return EXIT_SUCCESS
 

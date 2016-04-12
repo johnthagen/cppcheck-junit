@@ -5,7 +5,7 @@ import cppcheck_junit
 
 setup(
     name='cppcheck-junit',
-    version=cppcheck_junit.__version__,
+    version='1.1.0',
 
     description='Converts Cppcheck XML output to JUnit format.',
     long_description=open('README.rst').read(),

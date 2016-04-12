@@ -54,8 +54,16 @@ Convert it to JUnit XML format:
 
     $ cppcheck_junit cppcheck-result.xml cppcheck-junit.xml
 
+If no ``cppcheck`` errors are generated, a single ``"Cppcheck success"`` test case is
+output so that CI tools like Bamboo will not fail on the JUnit task.
+
 Releases
 --------
+
+1.1.0 - 2016-04-11
+^^^^^^^^^^^^^^^^^^
+
+If no ``cppcheck`` errors are parsed, output a single success test case to satisfy Bamboo.
 
 1.0.0 - 2016-02-15
 ^^^^^^^^^^^^^^^^^^

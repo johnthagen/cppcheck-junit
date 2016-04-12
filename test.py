@@ -6,7 +6,8 @@ import unittest
 import sys
 from xml.etree import ElementTree
 
-from cppcheck_junit import CppcheckError, generate_test_suite, parse_arguments, parse_cppcheck
+from cppcheck_junit import (CppcheckError, generate_single_success_test_suite,
+                            generate_test_suite, parse_arguments, parse_cppcheck)
 
 
 class ParseCppcheckTestCase(unittest.TestCase):
@@ -88,6 +89,16 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
         self.assertEqual(error_element.get('file'), 'file_name')
         self.assertEqual(error_element.get('line'), str(4))
         self.assertEqual(error_element.get('message'), '4: (severity) error message')
+
+
+class GenerateSingleSuccessTestSuite(unittest.TestCase):
+    def test(self):
+        tree = generate_single_success_test_suite()
+        root = tree.getroot()
+        self.assertEqual(root.get('tests'), str(1))
+
+        test_case_element = root.find('testcase')
+        self.assertEqual(test_case_element.get('name'), 'Cppcheck success')
 
 
 class ParseArgumentsTestCase(unittest.TestCase):
