@@ -60,6 +60,11 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+1.1.1 - 2016-04-11
+^^^^^^^^^^^^^^^^^^
+
+Fix ``requirements.txt`` include for ``setup.py``.
+
 1.1.0 - 2016-04-11
 ^^^^^^^^^^^^^^^^^^
 
