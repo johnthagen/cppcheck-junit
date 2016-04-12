@@ -1,7 +1,5 @@
 from setuptools import setup
 
-import cppcheck_junit
-
 
 setup(
     name='cppcheck-junit',
