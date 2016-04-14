@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="1.73"/>
+    <errors>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: tpl" verbose="Null pointer dereference: tpl" cwe="476">
+            <location file0="sources\dls\src\dls.c" file="sources\dls\src\dls.c" line="623"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: buf" verbose="Possible null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_apdk.c" file="sources\dls\src\dls_apdk.c" line="154"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: buf" verbose="Possible null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_apdk.c" file="sources\dls\src\dls_apdk.c" line="155"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: buf" verbose="Possible null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_apdk.c" file="sources\dls\src\dls_apdk.c" line="156"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: buf" verbose="Null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_batch.c" file="sources\dls\src\dls_batch.c" line="37"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: file" verbose="Null pointer dereference: file" cwe="476">
+            <location file0="sources\dls\src\dls_batch.c" file="sources\dls\src\dls_batch.c" line="37"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: file" verbose="Null pointer dereference: file" cwe="476">
+            <location file0="sources\dls\src\dls_batch.c" file="sources\dls\src\dls_batch.c" line="65"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: buf" verbose="Null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_batch.c" file="sources\dls\src\dls_batch.c" line="67"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: file" verbose="Null pointer dereference: file" cwe="476">
+            <location file0="sources\dls\src\dls_batch.c" file="sources\dls\src\dls_batch.c" line="67"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: stream" verbose="Possible null pointer dereference: stream" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="23"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: stream" verbose="Possible null pointer dereference: stream" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="24"/>
+        </error>
+        <error id="nullPointer" severity="warning" msg="Possible null pointer dereference: stream" verbose="Possible null pointer dereference: stream" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="25"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: buf" verbose="Null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="39"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: file" verbose="Null pointer dereference: file" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="39"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: buf" verbose="Null pointer dereference: buf" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="64"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: file" verbose="Null pointer dereference: file" cwe="476">
+            <location file0="sources\dls\src\dls_blp.c" file="sources\dls\src\dls_blp.c" line="64"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: f" verbose="Null pointer dereference: f" cwe="476">
+            <location file0="sources\dls\src\dls_cash.c" file="sources\dls\src\dls_cash.c" line="9"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: dp" verbose="Null pointer dereference: dp" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="139"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: f" verbose="Null pointer dereference: f" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="143"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: frame" verbose="Null pointer dereference: frame" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="245"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: f_s" verbose="Null pointer dereference: f_s" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="245"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: frame" verbose="Null pointer dereference: frame" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="247"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: f_d" verbose="Null pointer dereference: f_d" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="247"/>
+        </error>
+        <error id="nullPointer" severity="error" msg="Null pointer dereference: f" verbose="Null pointer dereference: f" cwe="476">
+            <location file0="sources\dls\src\dls_offline.c" file="sources\dls\src\dls_offline.c" line="268"/>
+        </error>
+        <error id="unknownEvaluationOrder" severity="error" msg="Expression &apos;*p++=tolower(*p)&apos; depends on order of evaluation of side effects" verbose="Expression &apos;*p++=tolower(*p)&apos; depends on order of evaluation of side effects">
+            <location file0="sources\dls\src\dls_utils.c" file="sources\dls\src\dls_utils.c" line="351"/>
+        </error>
+        <error id="incorrectLogicOperator" severity="warning" msg="Logical conjunction always evaluates to false: EXPR &lt; 48 &amp;&amp; EXPR &gt; 57." verbose="Logical conjunction always evaluates to false: EXPR &lt; 48 &amp;&amp; EXPR &gt; 57. Are these conditions necessary? Did you intend to use || instead? Are the numbers correct? Are you comparing the correct variables?" cwe="570">
+            <location file0="sources\maasai\src\maasai_extra_function.c" file="sources\maasai\src\maasai_extra_function.c" line="114"/>
+        </error>
+        <error id="checkCastIntToCharAndBack" severity="warning" msg="Storing fgetc() return value in char variable and then comparing with EOF." verbose="When saving fgetc() return value in char variable there is loss of precision.  When fgetc() returns EOF this value is truncated. Comparing the char variable with EOF can have unexpected results. For instance a loop &quot;while (EOF != (c = fgetc());&quot; loops forever on some compilers/platforms and on other compilers/platforms it will stop when the file contains a matching character.">
+            <location file0="sources\maasai\src\maasai_price.c" file="sources\maasai\src\maasai_price.c" line="271"/>
+        </error>
+        <error id="bufferAccessOutOfBounds" severity="error" msg="Buffer is accessed out of bounds." verbose="Buffer is accessed out of bounds." cwe="788">
+            <location file0="sources\src\Msgsys.c" file="sources\src\Msgsys.c" line="46"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(emv_tags)&apos; is redundant or there is possible null pointer dereference: emv_tags_start." verbose="Either the condition &apos;if(emv_tags)&apos; is redundant or there is possible null pointer dereference: emv_tags_start.">
+            <location file0="sources\src\Transact.c" file="sources\src\Transact.c" line="9919"/>
+            <location file0="sources\src\Transact.c" file="sources\src\Transact.c" line="9926"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="376"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="380"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="384"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="388"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="391"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="514"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="521"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="529"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="535"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="543"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="549"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="557"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="563"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="571"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="577"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="585"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="628"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="635"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="642"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="648"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="655"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="661"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="668"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="674"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="681"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="687"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\addsettings.c" file="sources\src\addsettings.c" line="694"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;(hbackup=fopen(&quot;ucontext&quot;,&quot;w+&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup." verbose="Either the condition &apos;(hbackup=fopen(&quot;ucontext&quot;,&quot;w+&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup.">
+            <location file0="sources\src\batch.c" file="sources\src\batch.c" line="247"/>
+            <location file0="sources\src\batch.c" file="sources\src\batch.c" line="249"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;(hbackup=fopen(&quot;ucontext&quot;,&quot;r&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup." verbose="Either the condition &apos;(hbackup=fopen(&quot;ucontext&quot;,&quot;r&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup.">
+            <location file0="sources\src\batch.c" file="sources\src\batch.c" line="291"/>
+            <location file0="sources\src\batch.c" file="sources\src\batch.c" line="293"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\bgimage_telium.c" file="sources\src\bgimage_telium.c" line="56"/>
+        </error>
+        <error id="constStatement" severity="warning" msg="Redundant code: Found a statement that begins with string constant." verbose="Redundant code: Found a statement that begins with string constant.">
+            <location file0="sources\src\bgimage_telium.c" file="sources\src\bgimage_telium.c" line="75"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%d in format string (no. 3) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;." verbose="%d in format string (no. 3) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file0="sources\src\bio.c" file="sources\src\bio.c" line="344"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\bms_bonus.c" file="sources\src\bms_bonus.c" line="442"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\bms_bonus.c" file="sources\src\bms_bonus.c" line="442"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\bms_bonus.c" file="sources\src\bms_bonus.c" line="1709"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\bms_bonus.c" file="sources\src\bms_bonus.c" line="1709"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;uint8 *&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;uint8 *&apos;.">
+            <location file0="sources\src\cortex.c" file="sources\src\cortex.c" line="591"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(port_name)&apos; is redundant or there is possible null pointer dereference: port_name." verbose="Either the condition &apos;if(port_name)&apos; is redundant or there is possible null pointer dereference: port_name.">
+            <location file0="sources\src\debug.c" file="sources\src\debug.c" line="260"/>
+            <location file0="sources\src\debug.c" file="sources\src\debug.c" line="257"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(fd)&apos; is redundant or there is possible null pointer dereference: fd." verbose="Either the condition &apos;if(fd)&apos; is redundant or there is possible null pointer dereference: fd.">
+            <location file0="sources\src\deferred.c" file="sources\src\deferred.c" line="1117"/>
+            <location file0="sources\src\deferred.c" file="sources\src\deferred.c" line="1113"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(pp&amp;&amp;!memcmp(p,&quot;HRS&quot;,3))&apos; is redundant or there is possible null pointer dereference: pp." verbose="Either the condition &apos;if(pp&amp;&amp;!memcmp(p,&quot;HRS&quot;,3))&apos; is redundant or there is possible null pointer dereference: pp.">
+            <location file0="sources\src\dynamic_menu.c" file="sources\src\dynamic_menu.c" line="317"/>
+            <location file0="sources\src\dynamic_menu.c" file="sources\src\dynamic_menu.c" line="313"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\giske.c" file="sources\src\giske.c" line="101"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\giske.c" file="sources\src\giske.c" line="101"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\giske.c" file="sources\src\giske.c" line="122"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\giske.c" file="sources\src\giske.c" line="122"/>
+        </error>
+        <error id="sizeofwithsilentarraypointer" severity="warning" msg="Using &apos;sizeof&apos; on array given as function argument returns size of a pointer." verbose="Using &apos;sizeof&apos; for array given as function argument returns the size of a pointer. It does not return the size of the whole array in bytes as might be expected. For example, this code:\012     int f(char a[100]) {\012         return sizeof(a);\012     }\012returns 4 (in 32-bit systems) or 8 (in 64-bit systems) instead of 100 (the size of the array in bytes).">
+            <location file0="sources\src\goldencrown.c" file="sources\src\goldencrown.c" line="71"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;protocol!=0&apos; is redundant or there is possible null pointer dereference: protocol." verbose="Either the condition &apos;protocol!=0&apos; is redundant or there is possible null pointer dereference: protocol.">
+            <location file0="sources\src\goods.c" file="sources\src\goods.c" line="1667"/>
+            <location file0="sources\src\goods.c" file="sources\src\goods.c" line="1667"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%d in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;." verbose="%d in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file0="sources\src\gui_callback.c" file="sources\src\gui_callback.c" line="18"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%d in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;." verbose="%d in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file0="sources\src\gui_callback.c" file="sources\src\gui_callback.c" line="19"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\kcb_accopen.c" file="sources\src\kcb_accopen.c" line="130"/>
+        </error>
+        <error id="unusedLabelSwitch" severity="warning" msg="Label &apos;preselected&apos; is not used. Should this be a &apos;case&apos; of the enclosing switch()?" verbose="Label &apos;preselected&apos; is not used. Should this be a &apos;case&apos; of the enclosing switch()?">
+            <location file0="sources\src\master.c" file="sources\src\master.c" line="2104"/>
+        </error>
+        <error id="invalidscanf" severity="warning" msg="scanf without field width limits can crash with huge input data." verbose="scanf without field width limits can crash with huge input data. Add a field width specifier to fix this problem:\012    %s =&gt; %20s\012\012Sample program that can crash:\012\012#include &lt;stdio.h&gt;\012int main()\012{\012    char c[5];\012    scanf(&quot;%s&quot;, c);\012    return 0;\012}\012\012Typing in 5 or more characters may make the program crash. The correct usage here is &apos;scanf(&quot;%4s&quot;, c);&apos;, as the maximum field width does not include the terminating null byte.\012Source: http://linux.die.net/man/3/scanf\012Source: http://www.opensource.apple.com/source/xnu/xnu-1456.1.26/libkern/stdio/scanf.c">
+            <location file0="sources\src\mifare_direct.c" file="sources\src\mifare_direct.c" line="79"/>
+        </error>
+        <error id="seekOnAppendedFile" severity="warning" msg="Repositioning operation performed on a file opened in append mode has no effect." verbose="Repositioning operation performed on a file opened in append mode has no effect.">
+            <location file0="sources\src\monit_magnit.c" file="sources\src\monit_magnit.c" line="470"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;Title!=0&apos; is redundant or there is possible null pointer dereference: src." verbose="Either the condition &apos;Title!=0&apos; is redundant or there is possible null pointer dereference: src.">
+            <location file0="sources\src\nw_display.c" file="sources\src\nw_display.c" line="366"/>
+            <location file0="sources\src\nw_display.c" file="sources\src\nw_display.c" line="59"/>
+        </error>
+        <error id="unusedLabelSwitch" severity="warning" msg="Label &apos;lblReconnect&apos; is not used. Should this be a &apos;case&apos; of the enclosing switch()?" verbose="Label &apos;lblReconnect&apos; is not used. Should this be a &apos;case&apos; of the enclosing switch()?">
+            <location file0="sources\src\openway.c" file="sources\src\openway.c" line="3665"/>
+        </error>
+        <error id="deallocuse" severity="error" msg="Dereferencing &apos;FieldIdx&apos; after it is deallocated / released" verbose="Dereferencing &apos;FieldIdx&apos; after it is deallocated / released" cwe="416">
+            <location file0="sources\src\openway.c" file="sources\src\openway.c" line="567"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%i in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;ptrdiff_t {aka signed int}&apos;." verbose="%i in format string (no. 1) requires &apos;int&apos; but the argument type is &apos;ptrdiff_t {aka signed int}&apos;.">
+            <location file0="sources\src\ow_dynkey.c" file="sources\src\ow_dynkey.c" line="991"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;(hbackup=fopen(&quot;payments&quot;,&quot;w+&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup." verbose="Either the condition &apos;(hbackup=fopen(&quot;payments&quot;,&quot;w+&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup.">
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="1006"/>
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="1008"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;(hbackup=fopen(&quot;payments&quot;,&quot;r&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup." verbose="Either the condition &apos;(hbackup=fopen(&quot;payments&quot;,&quot;r&quot;))==0&apos; is redundant or there is possible null pointer dereference: hbackup.">
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="1031"/>
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="1033"/>
+        </error>
+        <error id="clarifyStatement" severity="warning" msg="Ineffective statement similar to &apos;*A++;&apos;. Did you intend to write &apos;(*A)++;&apos;?" verbose="A statement like &apos;*A++;&apos; might not do what you intended. Postfix &apos;operator++&apos; is executed before &apos;operator*&apos;. Thus, the dereference is meaningless. Did you intend to write &apos;(*A)++;&apos;?">
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="1502"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;ptrdiff_t {aka signed int}&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;ptrdiff_t {aka signed int}&apos;.">
+            <location file0="sources\src\payments.c" file="sources\src\payments.c" line="411"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\payof.c" file="sources\src\payof.c" line="5104"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 2) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\payof.c" file="sources\src\payof.c" line="5104"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;signed int&apos;.">
+            <location file0="sources\src\payof.c" file="sources\src\payof.c" line="5173"/>
+        </error>
+        <error id="stringLiteralWrite" severity="error" msg="Modifying string literal &quot;&quot; directly or indirectly is undefined behaviour." verbose="Modifying string literal &quot;&quot; directly or indirectly is undefined behaviour.">
+            <location file0="sources\src\payof.c" file="sources\src\payof.c" line="1730"/>
+            <location file0="sources\src\payof.c" file="sources\src\payof.c" line="1789"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(cfg&amp;&amp;(cfg.channel==CHANNEL_ETHERNET))&apos; is redundant or there is possible null pointer dereference: cfg." verbose="Either the condition &apos;if(cfg&amp;&amp;(cfg.channel==CHANNEL_ETHERNET))&apos; is redundant or there is possible null pointer dereference: cfg.">
+            <location file0="sources\src\payof_config.c" file="sources\src\payof_config.c" line="1940"/>
+            <location file0="sources\src\payof_config.c" file="sources\src\payof_config.c" line="1935"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(cfg&amp;&amp;(cfg.channel==CHANNEL_ETHERNET))&apos; is redundant or there is possible null pointer dereference: cfg." verbose="Either the condition &apos;if(cfg&amp;&amp;(cfg.channel==CHANNEL_ETHERNET))&apos; is redundant or there is possible null pointer dereference: cfg.">
+            <location file0="sources\src\payof_config.c" file="sources\src\payof_config.c" line="1940"/>
+            <location file0="sources\src\payof_config.c" file="sources\src\payof_config.c" line="1933"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="155"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="157"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="159"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="163"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="165"/>
+        </error>
+        <error id="literalWithCharPtrCompare" severity="warning" msg="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?" verbose="String literal compared with variable &apos;police&apos;. Did you intend to use strcmp() instead?">
+            <location file0="sources\src\printerFont.c" file="sources\src\printerFont.c" line="167"/>
+        </error>
+        <error id="resourceLeak" severity="error" msg="Resource leak: f" verbose="Resource leak: f" cwe="775">
+            <location file0="sources\src\smartvista.c" file="sources\src\smartvista.c" line="3171"/>
+        </error>
+        <error id="ignoredReturnValue" severity="warning" msg="Return value of function fopen() is not used." verbose="Return value of function fopen() is not used.">
+            <location file0="sources\src\telium_manager.c" file="sources\src\telium_manager.c" line="805"/>
+        </error>
+        <error id="ignoredReturnValue" severity="warning" msg="Return value of function fopen() is not used." verbose="Return value of function fopen() is not used.">
+            <location file0="sources\src\telium_manager.c" file="sources\src\telium_manager.c" line="857"/>
+        </error>
+        <error id="leakReturnValNotUsed" severity="error" msg="Return value of allocation function &apos;fopen&apos; is not stored." verbose="Return value of allocation function &apos;fopen&apos; is not stored." cwe="771">
+            <location file0="sources\src\telium_manager.c" file="sources\src\telium_manager.c" line="805"/>
+        </error>
+        <error id="leakReturnValNotUsed" severity="error" msg="Return value of allocation function &apos;fopen&apos; is not stored." verbose="Return value of allocation function &apos;fopen&apos; is not stored." cwe="771">
+            <location file0="sources\src\telium_manager.c" file="sources\src\telium_manager.c" line="857"/>
+        </error>
+        <error id="invalidPrintfArgType_uint" severity="warning" msg="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;." verbose="%u in format string (no. 1) requires &apos;unsigned int&apos; but the argument type is &apos;int&apos;.">
+            <location file0="sources\src\tieto.c" file="sources\src\tieto.c" line="2636"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;if(file)&apos; is redundant or there is possible null pointer dereference: file." verbose="Either the condition &apos;if(file)&apos; is redundant or there is possible null pointer dereference: file.">
+            <location file0="sources\src\transport.c" file="sources\src\transport.c" line="403"/>
+            <location file0="sources\src\transport.c" file="sources\src\transport.c" line="401"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%d in format string (no. 2) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;." verbose="%d in format string (no. 2) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file0="sources\wrt\Src\ui.c" file="sources\wrt\Src\ui.c" line="611"/>
+        </error>
+        <error id="nullPointerRedundantCheck" severity="warning" msg="Either the condition &apos;outer_id!=0&apos; is redundant or there is possible null pointer dereference: outer_id." verbose="Either the condition &apos;outer_id!=0&apos; is redundant or there is possible null pointer dereference: outer_id.">
+            <location file0="sources\wrt\ext_serv.c" file="sources\wrt\ext_serv.c" line="434"/>
+            <location file0="sources\wrt\ext_serv.c" file="sources\wrt\ext_serv.c" line="435"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="warning" msg="%d in format string (no. 2) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;." verbose="%d in format string (no. 2) requires &apos;int&apos; but the argument type is &apos;unsigned int&apos;.">
+            <location file0="sources\wrt\wrt_all.c" file="sources\wrt\src\ui.c" line="611"/>
+        </error>
+        <error id="toomanyconfigs" severity="information" msg="Too many #ifdef configurations - cppcheck only checks 12 configurations. Use --force to check all configurations. For more details, use --enable=information." verbose="The checking of the file will be interrupted because there are too many #ifdef configurations. Checking of all #ifdef configurations can be forced by --force command line option or from GUI preferences. However that may increase the checking time. For more details, use --enable=information." cwe="398"/>
+    </errors>
+</results>

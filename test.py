@@ -29,6 +29,26 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file1][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
 
+    def test_no_location_element(self):
+        file = ''
+        errors = parse_cppcheck('tests/cppcheck-out-no-location-element.xml')
+
+        self.assertEqual(len(errors), 1)
+        error = errors[file][0]
+        self.assertEqual(error.file, file)
+        self.assertEqual(error.line, 0)
+        self.assertEqual(
+            error.message,
+            'Too many #ifdef configurations - cppcheck only checks 12 configurations. '
+            'Use --force to check all configurations. For more details, use '
+            '--enable=information.')
+        self.assertEqual(error.severity, 'information')
+
+    def test_bad_large(self):
+        errors = parse_cppcheck('tests/cppcheck-out-bad-large.xml')
+        self.assertEqual(len(errors), 43)
+
+
     def test_all(self):
         file1 = 'bad.cpp'
         file2 = 'bad2.cpp'

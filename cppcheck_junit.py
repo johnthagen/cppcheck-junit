@@ -80,8 +80,15 @@ def parse_cppcheck(file_name):
     errors = collections.defaultdict(list)
     for error_element in error_root:
         location_element = error_element.find('location')  # type: ElementTree.Element
-        error = CppcheckError(file=location_element.get('file'),
-                              line=int(location_element.get('line')),
+        if location_element is not None:
+            file = location_element.get('file')
+            line = int(location_element.get('line'))
+        else:
+            file = ''
+            line = 0
+
+        error = CppcheckError(file=file,
+                              line=line,
                               message=error_element.get('msg'),
                               severity=error_element.get('severity'),
                               error_id=error_element.get('id'),
