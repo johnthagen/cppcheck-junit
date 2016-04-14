@@ -48,7 +48,6 @@ class ParseCppcheckTestCase(unittest.TestCase):
         errors = parse_cppcheck('tests/cppcheck-out-bad-large.xml')
         self.assertEqual(len(errors), 43)
 
-
     def test_all(self):
         file1 = 'bad.cpp'
         file2 = 'bad2.cpp'
