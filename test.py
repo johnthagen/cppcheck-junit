@@ -2,8 +2,8 @@
 
 """cppcheck-junit tests."""
 
-import unittest
 import sys
+import unittest
 from xml.etree import ElementTree
 
 from cppcheck_junit import (CppcheckError, generate_single_success_test_suite,
