@@ -9,8 +9,7 @@ import os
 import sys
 from xml.etree import ElementTree
 
-EXIT_SUCCESS = 0
-EXIT_FAILURE = -1
+from exitstatus import ExitStatus
 
 
 class CppcheckError(object):
@@ -144,7 +143,7 @@ def generate_single_success_test_suite():
 
 
 def main():  # pragma: no cover
-    # type: () -> int
+    # type: () -> ExitStatus
     """Main function.
 
     Returns:
@@ -156,14 +155,14 @@ def main():  # pragma: no cover
         errors = parse_cppcheck(args.input_file)
     except ValueError as e:
         print(str(e))
-        return EXIT_FAILURE
+        return ExitStatus.failure
     except IOError as e:
         print(str(e))
-        return EXIT_FAILURE
+        return ExitStatus.failure
     except ElementTree.ParseError as e:
         print('{} is a malformed XML file. Did you use --xml-version=2?\n{}'.format(
             args.input_file, e))
-        return EXIT_FAILURE
+        return ExitStatus.failure
 
     if len(errors) > 0:
         tree = generate_test_suite(errors)
@@ -171,7 +170,7 @@ def main():  # pragma: no cover
         tree = generate_single_success_test_suite()
     tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
 
-    return EXIT_SUCCESS
+    return ExitStatus.success
 
 if __name__ == '__main__':  # pragma: no cover
     sys.exit(main())
