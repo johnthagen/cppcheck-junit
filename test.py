@@ -11,11 +11,11 @@ from cppcheck_junit import (CppcheckError, generate_single_success_test_suite,
 
 
 class ParseCppcheckTestCase(unittest.TestCase):
-    def test_good(self):
+    def test_good(self):  # type: () -> None
         errors = parse_cppcheck('tests/cppcheck-out-good.xml')
         self.assertEqual(errors, {})
 
-    def test_bad(self):
+    def test_bad(self):  # type: () -> None
         file1 = 'bad.cpp'
         errors = parse_cppcheck('tests/cppcheck-out-bad.xml')
 
@@ -29,7 +29,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file1][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
 
-    def test_no_location_element(self):
+    def test_no_location_element(self):    # type: () -> None
         file = ''
         errors = parse_cppcheck('tests/cppcheck-out-no-location-element.xml')
 
@@ -44,11 +44,11 @@ class ParseCppcheckTestCase(unittest.TestCase):
             '--enable=information.')
         self.assertEqual(error.severity, 'information')
 
-    def test_bad_large(self):
+    def test_bad_large(self):    # type: () -> None
         errors = parse_cppcheck('tests/cppcheck-out-bad-large.xml')
         self.assertEqual(len(errors), 43)
 
-    def test_all(self):
+    def test_all(self):    # type: () -> None
         file1 = 'bad.cpp'
         file2 = 'bad2.cpp'
         errors = parse_cppcheck('tests/cppcheck-out-all.xml')
@@ -73,21 +73,21 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file2][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
 
-    def test_xml_version_1(self):
+    def test_xml_version_1(self):  # type: () -> None
         with self.assertRaises(ValueError):
             parse_cppcheck('tests/cppcheck-out-bad-xml-version-1.xml')
 
-    def test_file_not_found(self):
+    def test_file_not_found(self):  # type: () -> None
         with self.assertRaises(IOError):
             parse_cppcheck('tests/file_does_not_exist.xml')
 
-    def test_malformed(self):
+    def test_malformed(self):  # type: () -> None
         with self.assertRaises(ElementTree.ParseError):
             parse_cppcheck('tests/cppcheck-out-malformed.xml')
 
 
 class GenerateTestSuiteTestCase(unittest.TestCase):
-    def test_single(self):
+    def test_single(self):  # type: () -> None
         errors = {'file_name':
                   [CppcheckError('file_name',
                                  4,
@@ -111,7 +111,7 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
 
 
 class GenerateSingleSuccessTestSuite(unittest.TestCase):
-    def test(self):
+    def test(self):  # type: () -> None
         tree = generate_single_success_test_suite()
         root = tree.getroot()
         self.assertEqual(root.get('tests'), str(1))
@@ -121,11 +121,11 @@ class GenerateSingleSuccessTestSuite(unittest.TestCase):
 
 
 class ParseArgumentsTestCase(unittest.TestCase):
-    def test_no_arguments(self):
+    def test_no_arguments(self):  # type: () -> None
         with self.assertRaises(SystemExit):
             # Suppress argparse stderr.
             class NullWriter:
-                def write(self, s):
+                def write(self, s):    # type: (str) -> None
                     pass
 
             sys.stderr = NullWriter()
