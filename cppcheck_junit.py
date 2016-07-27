@@ -2,6 +2,8 @@
 
 """Converts Cppcheck XML version 2 output to JUnit XML format."""
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import argparse
 import collections
 from typing import Dict, List  # noqa

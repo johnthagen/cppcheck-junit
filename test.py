@@ -2,6 +2,8 @@
 
 """cppcheck-junit tests."""
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import sys
 import unittest
 from xml.etree import ElementTree
@@ -29,7 +31,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(errors[file1][1].message,
                          "Array 'a[10]' accessed at index 10, which is out of bounds.")
 
-    def test_no_location_element(self):    # type: () -> None
+    def test_no_location_element(self):  # type: () -> None
         file = ''
         errors = parse_cppcheck('tests/cppcheck-out-no-location-element.xml')
 
@@ -42,6 +44,19 @@ class ParseCppcheckTestCase(unittest.TestCase):
             'Too many #ifdef configurations - cppcheck only checks 12 configurations. '
             'Use --force to check all configurations. For more details, use '
             '--enable=information.')
+        self.assertEqual(error.severity, 'information')
+
+    def test_missing_include_no_location_element(self):  # type: () -> None
+        file = ''
+        errors = parse_cppcheck('tests/cppcheck-out-missing-include-no-location-element.xml')
+
+        self.assertEqual(len(errors), 1)
+        error = errors[file][0]
+        self.assertEqual(error.file, file)
+        self.assertEqual(error.line, 0)
+        self.assertEqual(
+            error.message,
+            'Cppcheck cannot find all the include files (use --check-config for details)')
         self.assertEqual(error.severity, 'information')
 
     def test_bad_large(self):    # type: () -> None
@@ -108,6 +123,40 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
         self.assertEqual(error_element.get('file'), 'file_name')
         self.assertEqual(error_element.get('line'), str(4))
         self.assertEqual(error_element.get('message'), '4: (severity) error message')
+
+    def test_missing_file(self):  # type: () -> None
+        errors = {'':
+                  [CppcheckError(file='',
+                                 line=0,
+                                 message='Too many #ifdef configurations - cppcheck only checks '
+                                         '12 configurations. Use --force to check all '
+                                         'configurations. For more details, use '
+                                         '--enable=information.',
+                                 severity='information',
+                                 error_id='toomanyconfigs',
+                                 verbose='The checking of the file will be interrupted because '
+                                         'there are too many #ifdef configurations. Checking of '
+                                         'all #ifdef configurations can be forced by --force '
+                                         'command line option or from GUI preferences. However '
+                                         'that may increase the checking time. For more details, '
+                                         'use --enable=information.')]}
+        tree = generate_test_suite(errors)
+        root = tree.getroot()
+        self.assertEqual(root.get('errors'), str(1))
+        self.assertEqual(root.get('failures'), str(0))
+        self.assertEqual(root.get('tests'), str(1))
+
+        test_case_element = root.find('testcase')
+        self.assertEqual(test_case_element.get('name'), '')
+
+        error_element = test_case_element.find('error')
+        self.assertEqual(error_element.get('file'), '')
+        self.assertEqual(error_element.get('line'), str(0))
+        self.assertEqual(error_element.get('message'),
+                         '0: (information) Too many #ifdef configurations - cppcheck only checks '
+                         '12 configurations. Use --force to check all '
+                         'configurations. For more details, use '
+                         '--enable=information.')
 
 
 class GenerateSingleSuccessTestSuite(unittest.TestCase):

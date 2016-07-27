@@ -60,6 +60,12 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+1.2.0 - 2016-04-13
+^^^^^^^^^^^^^^^^^^
+
+Actually handle ``cppcheck`` errors that don't have a ``<location>`` tag.
+Update test suite to use ``tox``.
+
 1.1.2 - 2016-04-13
 ^^^^^^^^^^^^^^^^^^
 
