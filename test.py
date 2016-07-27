@@ -130,6 +130,3 @@ class ParseArgumentsTestCase(unittest.TestCase):
 
             sys.stderr = NullWriter()
             parse_arguments()
-
-if __name__ == '__main__':
-    unittest.main()

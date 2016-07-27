@@ -1,2 +1,2 @@
-exitstatus
+exitstatus>1.0.0
 typing
