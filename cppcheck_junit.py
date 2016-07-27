@@ -117,11 +117,11 @@ def generate_test_suite(errors):
     for file_name, errors in errors.items():
         test_case = ElementTree.SubElement(test_suite,
                                            'testcase',
-                                           name=os.path.relpath(file_name))
+                                           name=os.path.relpath(file_name) if file_name else '')
         for error in errors:
             ElementTree.SubElement(test_case,
                                    'error',
-                                   file=os.path.relpath(error.file),
+                                   file=os.path.relpath(error.file) if error.file else '',
                                    line=str(error.line),
                                    message='{}: ({}) {}'.format(error.line,
                                                                 error.severity,
