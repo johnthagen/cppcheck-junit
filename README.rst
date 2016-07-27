@@ -60,7 +60,7 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
-1.2.0 - 2016-04-13
+1.2.0 - 2016-07-27
 ^^^^^^^^^^^^^^^^^^
 
 Actually handle ``cppcheck`` errors that don't have a ``<location>`` tag.
