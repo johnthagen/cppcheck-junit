@@ -2,5 +2,6 @@ flake8>=3.0.3
 pep8-naming
 flake8-quotes
 flake8-import-order
+pylint
 pytest
 pytest-cov
