@@ -6,9 +6,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import argparse
 import collections
-from typing import Dict, List  # noqa
 import os
 import sys
+from typing import Dict, List  # noqa: F401
 from xml.etree import ElementTree
 
 from exitstatus import ExitStatus
