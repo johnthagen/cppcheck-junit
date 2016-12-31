@@ -174,5 +174,6 @@ def main():  # pragma: no cover
 
     return ExitStatus.success
 
+
 if __name__ == '__main__':  # pragma: no cover
     sys.exit(main())
