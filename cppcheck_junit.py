@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 
 """Converts Cppcheck XML version 2 output to JUnit XML format."""
 
