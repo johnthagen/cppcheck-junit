@@ -8,6 +8,8 @@ import argparse
 import collections
 import os
 import sys
+from datetime import datetime
+from socket import gethostname
 from typing import Dict, List  # noqa: F401
 from xml.etree import ElementTree
 
@@ -110,10 +112,12 @@ def generate_test_suite(errors):
         XML test suite.
     """
     test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['errors'] = str(len(errors))
-    test_suite.attrib['failures'] = str(0)
     test_suite.attrib['name'] = 'Cppcheck errors'
+    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
+    test_suite.attrib['hostname'] = gethostname()
     test_suite.attrib['tests'] = str(len(errors))
+    test_suite.attrib['failures'] = str(0)
+    test_suite.attrib['errors'] = str(len(errors))
     test_suite.attrib['time'] = str(1)
 
     for file_name, errors in errors.items():
@@ -137,7 +141,12 @@ def generate_single_success_test_suite():
     """Generates a single successful JUnit XML testcase."""
     test_suite = ElementTree.Element('testsuite')
     test_suite.attrib['name'] = 'Cppcheck errors'
+    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
+    test_suite.attrib['hostname'] = gethostname()
     test_suite.attrib['tests'] = str(1)
+    test_suite.attrib['failures'] = str(0)
+    test_suite.attrib['errors'] = str(0)
+    test_suite.attrib['time'] = str(1)
     ElementTree.SubElement(test_suite,
                            'testcase',
                            name='Cppcheck success')
