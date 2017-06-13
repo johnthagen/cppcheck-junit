@@ -6,10 +6,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import argparse
 import collections
-import os
 from datetime import datetime
-import sys
+import os
 from socket import gethostname
+import sys
 from typing import Dict, List  # noqa: F401
 from xml.etree import ElementTree
 
