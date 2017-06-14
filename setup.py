@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='cppcheck-junit',
-    version='1.3.0',
+    version='1.4.0',
 
     description='Converts Cppcheck XML output to JUnit format.',
     long_description=open('README.rst').read(),

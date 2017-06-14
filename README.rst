@@ -60,6 +60,11 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+1.4.0 - 2017-06-14
+^^^^^^^^^^^^^^^^^^
+
+Expand JUnit schema support by adding in some missing fields.
+
 1.3.0 - 2016-12-31
 ^^^^^^^^^^^^^^^^^^
 
