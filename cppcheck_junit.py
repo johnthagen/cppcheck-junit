@@ -123,10 +123,13 @@ def generate_test_suite(errors):
     for file_name, errors in errors.items():
         test_case = ElementTree.SubElement(test_suite,
                                            'testcase',
-                                           name=os.path.relpath(file_name) if file_name else '')
+                                           name=os.path.relpath(file_name) if file_name else '',
+                                           classname='',
+                                           time=str(1))
         for error in errors:
             ElementTree.SubElement(test_case,
                                    'error',
+                                   type='',
                                    file=os.path.relpath(error.file) if error.file else '',
                                    line=str(error.line),
                                    message='{}: ({}) {}'.format(error.line,
@@ -149,7 +152,9 @@ def generate_single_success_test_suite():
     test_suite.attrib['time'] = str(1)
     ElementTree.SubElement(test_suite,
                            'testcase',
-                           name='Cppcheck success')
+                           name='Cppcheck success',
+                           classname='',
+                           time=str(1))
     return ElementTree.ElementTree(test_suite)
 
 
