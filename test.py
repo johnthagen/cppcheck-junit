@@ -102,6 +102,15 @@ class ParseCppcheckTestCase(unittest.TestCase):
 
 
 class GenerateTestSuiteTestCase(unittest.TestCase):
+    # Expected attributes from JUnit XSD
+    #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
+    # @TODO: Better thing to do here would be to curl or otherwise access the
+    #        spec above instead of hardcoding pieces of it here
+    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests',
+                                  'failures', 'errors', 'time']
+    junit_testcase_attributes = ['name', 'classname', 'time']
+    junit_error_attributes = ['type']
+
     def test_single(self):  # type: () -> None
         errors = {'file_name':
                   [CppcheckError('file_name',
@@ -111,18 +120,27 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
                                  'error_id',
                                  'verbose error message')]}
         tree = generate_test_suite(errors)
-        root = tree.getroot()
-        self.assertEqual(root.get('errors'), str(1))
-        self.assertEqual(root.get('failures'), str(0))
-        self.assertEqual(root.get('tests'), str(1))
+        testsuite_element = tree.getroot()
+        self.assertEqual(testsuite_element.get('errors'), str(1))
+        self.assertEqual(testsuite_element.get('failures'), str(0))
+        self.assertEqual(testsuite_element.get('tests'), str(1))
+        # Check that testsuite element is compliant with the spec
+        for required_attribute in self.junit_testsuite_attributes:
+            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
 
-        test_case_element = root.find('testcase')
-        self.assertEqual(test_case_element.get('name'), 'file_name')
+        testcase_element = testsuite_element.find('testcase')
+        self.assertEqual(testcase_element.get('name'), 'file_name')
+        # Check that test_case is compliant with the spec
+        for required_attribute in self.junit_testcase_attributes:
+            self.assertTrue(required_attribute in testcase_element.attrib.keys())
 
-        error_element = test_case_element.find('error')
+        error_element = testcase_element.find('error')
         self.assertEqual(error_element.get('file'), 'file_name')
         self.assertEqual(error_element.get('line'), str(4))
         self.assertEqual(error_element.get('message'), '4: (severity) error message')
+        # Check that error element is compliant with the spec
+        for required_attribute in self.junit_error_attributes:
+            self.assertTrue(required_attribute in error_element.attrib.keys())
 
     def test_missing_file(self):  # type: () -> None
         errors = {'':
@@ -141,15 +159,21 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
                                          'that may increase the checking time. For more details, '
                                          'use --enable=information.')]}
         tree = generate_test_suite(errors)
-        root = tree.getroot()
-        self.assertEqual(root.get('errors'), str(1))
-        self.assertEqual(root.get('failures'), str(0))
-        self.assertEqual(root.get('tests'), str(1))
+        testsuite_element = tree.getroot()
+        self.assertEqual(testsuite_element.get('errors'), str(1))
+        self.assertEqual(testsuite_element.get('failures'), str(0))
+        self.assertEqual(testsuite_element.get('tests'), str(1))
+        # Check that testsuite element is compliant with the spec
+        for required_attribute in self.junit_testsuite_attributes:
+            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
 
-        test_case_element = root.find('testcase')
-        self.assertEqual(test_case_element.get('name'), '')
+        testcase_element = testsuite_element.find('testcase')
+        self.assertEqual(testcase_element.get('name'), '')
+        # Check that test_case is compliant with the spec
+        for required_attribute in self.junit_testcase_attributes:
+            self.assertTrue(required_attribute in testcase_element.attrib.keys())
 
-        error_element = test_case_element.find('error')
+        error_element = testcase_element.find('error')
         self.assertEqual(error_element.get('file'), '')
         self.assertEqual(error_element.get('line'), str(0))
         self.assertEqual(error_element.get('message'),
@@ -157,16 +181,35 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
                          '12 configurations. Use --force to check all '
                          'configurations. For more details, use '
                          '--enable=information.')
+        # Check that error element is compliant with the spec
+        for required_attribute in self.junit_error_attributes:
+            self.assertTrue(required_attribute in error_element.attrib.keys())
 
 
 class GenerateSingleSuccessTestSuite(unittest.TestCase):
+    # Expected attributes from JUnit XSD
+    #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
+    # @TODO: Better thing to do here would be to curl or otherwise access the
+    #        spec above instead of hardcoding pieces of it here
+    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests',
+                                  'failures', 'errors', 'time']
+    junit_testcase_attributes = ['name', 'classname', 'time']
+
     def test(self):  # type: () -> None
         tree = generate_single_success_test_suite()
-        root = tree.getroot()
-        self.assertEqual(root.get('tests'), str(1))
+        testsuite_element = tree.getroot()
+        self.assertEqual(testsuite_element.get('tests'), str(1))
+        self.assertEqual(testsuite_element.get('errors'), str(0))
+        self.assertEqual(testsuite_element.get('failures'), str(0))
+        # Check that testsuite element is compliant with the spec
+        for required_attribute in self.junit_testsuite_attributes:
+            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
 
-        test_case_element = root.find('testcase')
-        self.assertEqual(test_case_element.get('name'), 'Cppcheck success')
+        testcase_element = testsuite_element.find('testcase')
+        self.assertEqual(testcase_element.get('name'), 'Cppcheck success')
+        # Check that test_case is compliant with the spec
+        for required_attribute in self.junit_testcase_attributes:
+            self.assertTrue(required_attribute in testcase_element.attrib.keys())
 
 
 class ParseArgumentsTestCase(unittest.TestCase):

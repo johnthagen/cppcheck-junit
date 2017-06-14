@@ -6,7 +6,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import argparse
 import collections
+from datetime import datetime
 import os
+from socket import gethostname
 import sys
 from typing import Dict, List  # noqa: F401
 from xml.etree import ElementTree
@@ -110,19 +112,24 @@ def generate_test_suite(errors):
         XML test suite.
     """
     test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['errors'] = str(len(errors))
-    test_suite.attrib['failures'] = str(0)
     test_suite.attrib['name'] = 'Cppcheck errors'
+    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
+    test_suite.attrib['hostname'] = gethostname()
     test_suite.attrib['tests'] = str(len(errors))
+    test_suite.attrib['failures'] = str(0)
+    test_suite.attrib['errors'] = str(len(errors))
     test_suite.attrib['time'] = str(1)
 
     for file_name, errors in errors.items():
         test_case = ElementTree.SubElement(test_suite,
                                            'testcase',
-                                           name=os.path.relpath(file_name) if file_name else '')
+                                           name=os.path.relpath(file_name) if file_name else '',
+                                           classname='',
+                                           time=str(1))
         for error in errors:
             ElementTree.SubElement(test_case,
                                    'error',
+                                   type='',
                                    file=os.path.relpath(error.file) if error.file else '',
                                    line=str(error.line),
                                    message='{}: ({}) {}'.format(error.line,
@@ -137,10 +144,17 @@ def generate_single_success_test_suite():
     """Generates a single successful JUnit XML testcase."""
     test_suite = ElementTree.Element('testsuite')
     test_suite.attrib['name'] = 'Cppcheck errors'
+    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
+    test_suite.attrib['hostname'] = gethostname()
     test_suite.attrib['tests'] = str(1)
+    test_suite.attrib['failures'] = str(0)
+    test_suite.attrib['errors'] = str(0)
+    test_suite.attrib['time'] = str(1)
     ElementTree.SubElement(test_suite,
                            'testcase',
-                           name='Cppcheck success')
+                           name='Cppcheck success',
+                           classname='',
+                           time=str(1))
     return ElementTree.ElementTree(test_suite)
 
 
