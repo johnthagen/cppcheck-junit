@@ -106,7 +106,8 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
     #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
     # @TODO: Better thing to do here would be to curl or otherwise access the
     #        spec above instead of hardcoding pieces of it here
-    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests', 'failures', 'errors', 'time']
+    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests',
+                                  'failures', 'errors', 'time']
     junit_testcase_attributes = ['name', 'classname', 'time']
     junit_error_attributes = ['type']
 
@@ -190,7 +191,8 @@ class GenerateSingleSuccessTestSuite(unittest.TestCase):
     #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
     # @TODO: Better thing to do here would be to curl or otherwise access the
     #        spec above instead of hardcoding pieces of it here
-    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests', 'failures', 'errors', 'time']
+    junit_testsuite_attributes = ['name', 'timestamp', 'hostname', 'tests',
+                                  'failures', 'errors', 'time']
     junit_testcase_attributes = ['name', 'classname', 'time']
 
     def test(self):  # type: () -> None
