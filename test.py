@@ -169,6 +169,7 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
 
         testcase_element = testsuite_element.find('testcase')
         self.assertEqual(testcase_element.get('name'), 'Cppcheck error')
+        self.assertEqual(testcase_element.get('classname'), 'Cppcheck error')
         # Check that test_case is compliant with the spec
         for required_attribute in self.junit_testcase_attributes:
             self.assertTrue(required_attribute in testcase_element.attrib.keys())
@@ -207,6 +208,7 @@ class GenerateSingleSuccessTestSuite(unittest.TestCase):
 
         testcase_element = testsuite_element.find('testcase')
         self.assertEqual(testcase_element.get('name'), 'Cppcheck success')
+        self.assertEqual(testcase_element.get('classname'), 'Cppcheck success')
         # Check that test_case is compliant with the spec
         for required_attribute in self.junit_testcase_attributes:
             self.assertTrue(required_attribute in testcase_element.attrib.keys())
