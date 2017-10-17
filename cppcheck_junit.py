@@ -123,8 +123,9 @@ def generate_test_suite(errors):
     for file_name, errors in errors.items():
         test_case = ElementTree.SubElement(test_suite,
                                            'testcase',
-                                           name=os.path.relpath(file_name) if file_name else '',
-                                           classname='',
+                                           name=os.path.relpath(
+                                               file_name) if file_name else 'Cppcheck error',
+                                           classname='Cppcheck error',
                                            time=str(1))
         for error in errors:
             ElementTree.SubElement(test_case,
@@ -153,7 +154,7 @@ def generate_single_success_test_suite():
     ElementTree.SubElement(test_suite,
                            'testcase',
                            name='Cppcheck success',
-                           classname='',
+                           classname='Cppcheck success',
                            time=str(1))
     return ElementTree.ElementTree(test_suite)
 

@@ -168,7 +168,7 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
             self.assertTrue(required_attribute in testsuite_element.attrib.keys())
 
         testcase_element = testsuite_element.find('testcase')
-        self.assertEqual(testcase_element.get('name'), '')
+        self.assertEqual(testcase_element.get('name'), 'Cppcheck error')
         # Check that test_case is compliant with the spec
         for required_attribute in self.junit_testcase_attributes:
             self.assertTrue(required_attribute in testcase_element.attrib.keys())
