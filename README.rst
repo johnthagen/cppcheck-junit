@@ -60,6 +60,12 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+1.5.0 - 2017-10-18
+^^^^^^^^^^^^^^^^^^
+
+Fix Bamboo support by always filling in ``name`` and ``classname`` attributes on JUnit error
+test cases.
+
 1.4.0 - 2017-06-14
 ^^^^^^^^^^^^^^^^^^
 
