@@ -133,7 +133,7 @@ def generate_test_suite(errors):
                                    'failure',
                                    type=error.error_id,
                                    message='[{}] {}: {}:{}'.format(error.severity,
-                                                                   error.error_id
+                                                                   error.error_id,
                                                                    path,
                                                                    error.line),
                                    verbose=msg)
