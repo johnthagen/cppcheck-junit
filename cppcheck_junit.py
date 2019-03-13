@@ -116,8 +116,8 @@ def generate_test_suite(errors):
     test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
     test_suite.attrib['hostname'] = gethostname()
     test_suite.attrib['tests'] = str(len(errors))
-    test_suite.attrib['failures'] = str(0)
-    test_suite.attrib['errors'] = str(len(errors))
+    test_suite.attrib['failures'] = str(len(errors))
+    test_suite.attrib['errors'] = str(0)
     test_suite.attrib['time'] = str(1)
 
     for file_name, errors in errors.items():
@@ -128,14 +128,15 @@ def generate_test_suite(errors):
                                            classname='Cppcheck error',
                                            time=str(1))
         for error in errors:
+            path = os.path.relpath(error.file) if error.file else '-'
+            msg = error.verbose if error.verbose else error.msg
             ElementTree.SubElement(test_case,
-                                   'error',
-                                   type='',
-                                   file=os.path.relpath(error.file) if error.file else '',
-                                   line=str(error.line),
-                                   message='{}: ({}) {}'.format(error.line,
-                                                                error.severity,
-                                                                error.message))
+                                   'failure',
+                                   type=error.error_id,
+                                   message=' [{}]: {}:{}\n{}'.format(error.severity,
+                                                                     path,
+                                                                     error.line,
+                                                                     msg))
 
     return ElementTree.ElementTree(test_suite)
 
