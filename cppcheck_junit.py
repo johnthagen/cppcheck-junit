@@ -148,13 +148,11 @@ def generate_test_cases(errors):
                                            'testcase',
                                            id=error.file_with_line,
                                            name=error.file_with_line)
-        ElementTree.SubElement(test_case,
-                               'failure',
-                               type=error.id,
-                               message='[{}] {}: '.format(error.severity,
-                                                          error.id,
-                                                          error.file_with_line),
-                               verbose=error.message)
+        failure = ElementTree.SubElement(test_case,
+                                         'failure',
+                                         type=error.id,
+                                         message=error.message)
+        failure.text = '\n[{}] {}: {}\n{}\n'.format(error.severity, error.id, error.file_with_line, error.verbose)
     return ElementTree.ElementTree(root)
 
 
