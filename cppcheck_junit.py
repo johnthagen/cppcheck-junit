@@ -22,8 +22,9 @@ class CppcheckError(object):
                  line,  # type: int
                  message,  # type: str
                  severity,  # type: str
-                 error_id,  # type: str
-                 verbose  # type: str
+                 id,  # type: str
+                 verbose,  # type: str
+                 cwe  # type: str
                  ):
         # type: (...) -> CppcheckError
         """Constructor.
@@ -33,15 +34,25 @@ class CppcheckError(object):
             line: Line error originated on.
             message: Error message.
             severity: Severity of the error.
-            error_id: Unique identifier for the error.
+            id: Unique identifier for the error.
             verbose: Verbose error message.
+            cwe: CWE of found error
         """
-        self.file = file
-        self.line = line
+        self.file = os.path.relpath(file) if file is not None else '[UNK]'
+        self.line = line if line is not None else '0'
         self.message = message
         self.severity = severity
-        self.error_id = error_id
-        self.verbose = verbose
+        self.id = id
+        self.cwe = cwe
+        self._verbose = verbose
+
+    @property
+    def file_with_line(self):
+        return '{}:{}'.format(self.file, self.line)
+
+    @property
+    def verbose(self):
+        return self._verbose if self._verbose else self.message
 
 
 def parse_arguments():
@@ -58,7 +69,7 @@ def parse_arguments():
 
 
 def parse_cppcheck(file_name):
-    # type: (str) -> Dict[str, List[CppcheckError]]
+    # type: (str) -> List[CppcheckError]
     """Parses a Cppcheck XML version 2 file.
 
     Args:
@@ -80,28 +91,46 @@ def parse_cppcheck(file_name):
 
     error_root = root.find('errors')
 
-    errors = collections.defaultdict(list)
+    errors = []
     for error_element in error_root:
-        location_element = error_element.find('location')  # type: ElementTree.Element
-        if location_element is not None:
-            file = location_element.get('file')
-            line = int(location_element.get('line'))
+        location_elements = error_element.findall('location')  # type: List[ElementTree.Element]
+        if location_elements:
+            file_location = [(elem.get('file'), elem.get('line')) for elem in location_elements]
         else:
-            file = ''
-            line = 0
+            file_location = [(None, None)]
 
-        error = CppcheckError(file=file,
-                              line=line,
-                              message=error_element.get('msg'),
-                              severity=error_element.get('severity'),
-                              error_id=error_element.get('id'),
-                              verbose=error_element.get('verbose'))
-        errors[error.file].append(error)
-
+        for file, line in file_location:
+            error = CppcheckError(file=file,
+                                  line=line,
+                                  message=error_element.get('msg'),
+                                  severity=error_element.get('severity'),
+                                  id=error_element.get('id'),
+                                  verbose=error_element.get('verbose'),
+                                  cwe=error_element.get('cwe'))
+            errors.append(error)
     return errors
 
 
-def generate_test_suite(errors):
+def generate_root_element(tests_num, failures_num):
+    test_suites = ElementTree.Element('testsuites')
+    test_suites.attrib['name'] = 'Cppcheck errors'
+    test_suites.attrib['id'] = datetime.isoformat(datetime.now())
+    test_suites.attrib['tests'] = str(tests_num)
+    test_suites.attrib['failures'] = str(failures_num)
+    test_suites.attrib['errors'] = str(0)
+    test_suites.attrib['time'] = str(1)
+
+    test_suite = ElementTree.SubElement(test_suites,
+                                        'testsuite',
+                                        id="0",
+                                        name="Cppcheck errors[ts]",
+                                        classname='Cppcheck error[ts_c]',
+                                        time=str(1))
+
+    return test_suites, test_suite
+
+
+def generate_test_cases(errors):
     # type: (Dict[str, List[CppcheckError]]) -> ElementTree.ElementTree
     """Converts parsed Cppcheck errors into JUnit XML tree.
 
@@ -111,47 +140,29 @@ def generate_test_suite(errors):
     Returns:
         XML test suite.
     """
-    test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['name'] = 'Cppcheck errors'
-    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
-    test_suite.attrib['hostname'] = gethostname()
-    test_suite.attrib['tests'] = str(len(errors))
-    test_suite.attrib['failures'] = str(len(errors))
-    test_suite.attrib['errors'] = str(0)
-    test_suite.attrib['time'] = str(1)
 
-    for file_name, errors in errors.items():
+    root, test_suite = generate_root_element(len(errors), len(errors))
+
+    for error in errors:
         test_case = ElementTree.SubElement(test_suite,
                                            'testcase',
-                                           name=os.path.relpath(file_name) if file_name else 'Cppcheck error',
-                                           classname='Cppcheck error',
-                                           time=str(1))
-        for error in errors:
-            path = os.path.relpath(error.file) if error.file else '-'
-            msg = error.verbose if error.verbose else error.msg
-            ElementTree.SubElement(test_case,
-                                   'failure',
-                                   type=error.error_id,
-                                   message='[{}] {}: {}:{}'.format(error.severity,
-                                                                   error.error_id,
-                                                                   path,
-                                                                   error.line),
-                                   verbose=msg)
-
-    return ElementTree.ElementTree(test_suite)
+                                           id=error.file_with_line,
+                                           name=error.file_with_line)
+        ElementTree.SubElement(test_case,
+                               'failure',
+                               type=error.id,
+                               message='[{}] {}: '.format(error.severity,
+                                                          error.id,
+                                                          error.file_with_line),
+                               verbose=error.message)
+    return ElementTree.ElementTree(root)
 
 
-def generate_single_success_test_suite():
+def generate_single_success_test_case():
     # type: () -> ElementTree.ElementTree
     """Generates a single successful JUnit XML testcase."""
-    test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['name'] = 'Cppcheck errors'
-    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
-    test_suite.attrib['hostname'] = gethostname()
-    test_suite.attrib['tests'] = str(1)
-    test_suite.attrib['failures'] = str(0)
-    test_suite.attrib['errors'] = str(0)
-    test_suite.attrib['time'] = str(1)
+    root, test_suite = generate_root_element(1, 0)
+
     ElementTree.SubElement(test_suite,
                            'testcase',
                            name='Cppcheck success',
@@ -183,9 +194,9 @@ def main():  # pragma: no cover
         return ExitStatus.failure
 
     if len(errors) > 0:
-        tree = generate_test_suite(errors)
+        tree = generate_test_cases(errors)
     else:
-        tree = generate_single_success_test_suite()
+        tree = generate_single_success_test_case()
     tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
 
     return ExitStatus.success
