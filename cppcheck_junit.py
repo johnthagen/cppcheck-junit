@@ -128,7 +128,7 @@ def generate_test_suite(errors):
                                            classname='Cppcheck error',
                                            time=str(1))
         for error in errors:
-            path = os.path.relpath(error.file) if error.file else '-'
+            path = error.file if error.file else '-'
             msg = error.verbose if error.verbose else error.msg
             ElementTree.SubElement(test_case,
                                    'failure',
