@@ -57,8 +57,8 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
-1.7.0 2019-12-14
-^^^^^^^^^^^^^^^^
+1.7.0 - 2019-12-14
+^^^^^^^^^^^^^^^^^^
 
 - Drop Python 3.4 and support Python 3.8.
 - Include license file.
