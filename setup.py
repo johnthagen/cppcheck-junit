@@ -12,12 +12,12 @@ setup(
     author='John Hagen',
     author_email='johnthagen@gmail.com',
     url='https://github.com/johnthagen/cppcheck-junit',
-    license='MIT',
 
     py_modules=['cppcheck_junit'],
     install_requires=open('requirements.txt').readlines(),
     zip_safe=False,
 
+    license='MIT',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -29,10 +29,10 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries :: Python Modules',
