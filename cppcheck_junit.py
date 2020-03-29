@@ -2,30 +2,21 @@
 
 """Converts Cppcheck XML version 2 output to JUnit XML format."""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
-
 import argparse
 import collections
 from datetime import datetime
 import os
 from socket import gethostname
 import sys
-from typing import Dict, List  # noqa: F401
+from typing import Dict, List
 from xml.etree import ElementTree
 
 from exitstatus import ExitStatus
 
 
-class CppcheckError(object):
-    def __init__(self,
-                 file,  # type: str
-                 line,  # type: int
-                 message,  # type: str
-                 severity,  # type: str
-                 error_id,  # type: str
-                 verbose  # type: str
-                 ):
-        # type: (...) -> CppcheckError
+class CppcheckError:
+    def __init__(self, file: str, line: int, message: str, severity: str, error_id: str,
+                 verbose: str) -> None:
         """Constructor.
 
         Args:
@@ -44,8 +35,7 @@ class CppcheckError(object):
         self.verbose = verbose
 
 
-def parse_arguments():
-    # type: () -> argparse.Namespace
+def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description='Converts Cppcheck XML version 2 to JUnit XML format.\n'
                     'Usage:\n'
@@ -57,8 +47,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def parse_cppcheck(file_name):
-    # type: (str) -> Dict[str, List[CppcheckError]]
+def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
     """Parses a Cppcheck XML version 2 file.
 
     Args:
@@ -75,7 +64,7 @@ def parse_cppcheck(file_name):
     root = ElementTree.parse(file_name).getroot()  # type: ElementTree.Element
 
     if (root.get('version') is None or
-       int(root.get('version')) != 2):
+            int(root.get('version')) != 2):
         raise ValueError('Parser only supports Cppcheck XML version 2.  Use --xml-version=2.')
 
     error_root = root.find('errors')
@@ -101,8 +90,7 @@ def parse_cppcheck(file_name):
     return errors
 
 
-def generate_test_suite(errors):
-    # type: (Dict[str, List[CppcheckError]]) -> ElementTree.ElementTree
+def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.ElementTree:
     """Converts parsed Cppcheck errors into JUnit XML tree.
 
     Args:
@@ -140,8 +128,7 @@ def generate_test_suite(errors):
     return ElementTree.ElementTree(test_suite)
 
 
-def generate_single_success_test_suite():
-    # type: () -> ElementTree.ElementTree
+def generate_single_success_test_suite() -> ElementTree.ElementTree:
     """Generates a single successful JUnit XML testcase."""
     test_suite = ElementTree.Element('testsuite')
     test_suite.attrib['name'] = 'Cppcheck errors'
@@ -159,8 +146,7 @@ def generate_single_success_test_suite():
     return ElementTree.ElementTree(test_suite)
 
 
-def main():  # pragma: no cover
-    # type: () -> ExitStatus
+def main() -> ExitStatus:  # pragma: no cover
     """Main function.
 
     Returns:
