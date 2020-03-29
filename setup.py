@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='cppcheck-junit',
-    version='1.7.0',
+    version='2.0.0',
 
     description='Converts Cppcheck XML output to JUnit format.',
     long_description=open('README.rst').read(),
@@ -15,9 +15,11 @@ setup(
 
     py_modules=['cppcheck_junit'],
     install_requires=open('requirements.txt').readlines(),
+    python_requires='>=3.5',
     zip_safe=False,
 
     license='MIT',
+    license_files=['LICENSE.txt'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -26,8 +28,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: C++',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
