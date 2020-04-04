@@ -1,8 +1,8 @@
 cppcheck JUnit Converter
 ========================
 
-.. image:: https://travis-ci.org/johnthagen/cppcheck-junit.svg
-    :target: https://travis-ci.org/johnthagen/cppcheck-junit
+.. image:: https://travis-ci.com/johnthagen/cppcheck-junit.svg
+    :target: https://travis-ci.com/johnthagen/cppcheck-junit
 
 .. image:: https://codeclimate.com/github/johnthagen/cppcheck-junit/badges/gpa.svg
    :target: https://codeclimate.com/github/johnthagen/cppcheck-junit
