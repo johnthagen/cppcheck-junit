@@ -15,8 +15,9 @@ from exitstatus import ExitStatus
 
 
 class CppcheckError:
-    def __init__(self, file: str, line: int, message: str, severity: str, error_id: str,
-                 verbose: str) -> None:
+    def __init__(
+        self, file: str, line: int, message: str, severity: str, error_id: str, verbose: str
+    ) -> None:
         """Constructor.
 
         Args:
@@ -37,13 +38,14 @@ class CppcheckError:
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description='Converts Cppcheck XML version 2 to JUnit XML format.\n'
-                    'Usage:\n'
-                    '\t$ cppcheck --xml-version=2 --enable=all . 2> cppcheck-result.xml\n'
-                    '\t$ cppcheck_junit cppcheck-result.xml cppcheck-junit.xml\n',
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('input_file', type=str, help='Cppcheck XML version 2 stderr file.')
-    parser.add_argument('output_file', type=str, help='JUnit XML output file.')
+        description="Converts Cppcheck XML version 2 to JUnit XML format.\n"
+        "Usage:\n"
+        "\t$ cppcheck --xml-version=2 --enable=all . 2> cppcheck-result.xml\n"
+        "\t$ cppcheck_junit cppcheck-result.xml cppcheck-junit.xml\n",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("input_file", type=str, help="Cppcheck XML version 2 stderr file.")
+    parser.add_argument("output_file", type=str, help="JUnit XML output file.")
     return parser.parse_args()
 
 
@@ -61,30 +63,31 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
         xml.etree.ElementTree.ParseError: If file_name is not a valid XML file.
         ValueError: If unsupported Cppcheck XML version.
     """
-    root = ElementTree.parse(file_name).getroot()  # type: ElementTree.Element
+    root: ElementTree.Element = ElementTree.parse(file_name).getroot()
 
-    if (root.get('version') is None or
-            int(root.get('version')) != 2):
-        raise ValueError('Parser only supports Cppcheck XML version 2.  Use --xml-version=2.')
+    if root.get("version") is None or int(root.get("version")) != 2:
+        raise ValueError("Parser only supports Cppcheck XML version 2.  Use --xml-version=2.")
 
-    error_root = root.find('errors')
+    error_root = root.find("errors")
 
     errors = collections.defaultdict(list)
     for error_element in error_root:
-        location_element = error_element.find('location')  # type: ElementTree.Element
+        location_element: ElementTree.Element = error_element.find("location")
         if location_element is not None:
-            file = location_element.get('file')
-            line = int(location_element.get('line'))
+            file = location_element.get("file")
+            line = int(location_element.get("line"))
         else:
-            file = ''
+            file = ""
             line = 0
 
-        error = CppcheckError(file=file,
-                              line=line,
-                              message=error_element.get('msg'),
-                              severity=error_element.get('severity'),
-                              error_id=error_element.get('id'),
-                              verbose=error_element.get('verbose'))
+        error = CppcheckError(
+            file=file,
+            line=line,
+            message=error_element.get("msg"),
+            severity=error_element.get("severity"),
+            error_id=error_element.get("id"),
+            verbose=error_element.get("verbose"),
+        )
         errors[error.file].append(error)
 
     return errors
@@ -99,50 +102,49 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
     Returns:
         XML test suite.
     """
-    test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['name'] = 'Cppcheck errors'
-    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
-    test_suite.attrib['hostname'] = gethostname()
-    test_suite.attrib['tests'] = str(len(errors))
-    test_suite.attrib['failures'] = str(0)
-    test_suite.attrib['errors'] = str(len(errors))
-    test_suite.attrib['time'] = str(1)
+    test_suite = ElementTree.Element("testsuite")
+    test_suite.attrib["name"] = "Cppcheck errors"
+    test_suite.attrib["timestamp"] = datetime.isoformat(datetime.now())
+    test_suite.attrib["hostname"] = gethostname()
+    test_suite.attrib["tests"] = str(len(errors))
+    test_suite.attrib["failures"] = str(0)
+    test_suite.attrib["errors"] = str(len(errors))
+    test_suite.attrib["time"] = str(1)
 
     for file_name, errors in errors.items():
-        test_case = ElementTree.SubElement(test_suite,
-                                           'testcase',
-                                           name=os.path.relpath(
-                                               file_name) if file_name else 'Cppcheck error',
-                                           classname='Cppcheck error',
-                                           time=str(1))
+        test_case = ElementTree.SubElement(
+            test_suite,
+            "testcase",
+            name=os.path.relpath(file_name) if file_name else "Cppcheck error",
+            classname="Cppcheck error",
+            time=str(1),
+        )
         for error in errors:
-            ElementTree.SubElement(test_case,
-                                   'error',
-                                   type='',
-                                   file=os.path.relpath(error.file) if error.file else '',
-                                   line=str(error.line),
-                                   message='{}: ({}) {}'.format(error.line,
-                                                                error.severity,
-                                                                error.message))
+            ElementTree.SubElement(
+                test_case,
+                "error",
+                type="",
+                file=os.path.relpath(error.file) if error.file else "",
+                line=str(error.line),
+                message="{}: ({}) {}".format(error.line, error.severity, error.message),
+            )
 
     return ElementTree.ElementTree(test_suite)
 
 
 def generate_single_success_test_suite() -> ElementTree.ElementTree:
     """Generates a single successful JUnit XML testcase."""
-    test_suite = ElementTree.Element('testsuite')
-    test_suite.attrib['name'] = 'Cppcheck errors'
-    test_suite.attrib['timestamp'] = datetime.isoformat(datetime.now())
-    test_suite.attrib['hostname'] = gethostname()
-    test_suite.attrib['tests'] = str(1)
-    test_suite.attrib['failures'] = str(0)
-    test_suite.attrib['errors'] = str(0)
-    test_suite.attrib['time'] = str(1)
-    ElementTree.SubElement(test_suite,
-                           'testcase',
-                           name='Cppcheck success',
-                           classname='Cppcheck success',
-                           time=str(1))
+    test_suite = ElementTree.Element("testsuite")
+    test_suite.attrib["name"] = "Cppcheck errors"
+    test_suite.attrib["timestamp"] = datetime.isoformat(datetime.now())
+    test_suite.attrib["hostname"] = gethostname()
+    test_suite.attrib["tests"] = str(1)
+    test_suite.attrib["failures"] = str(0)
+    test_suite.attrib["errors"] = str(0)
+    test_suite.attrib["time"] = str(1)
+    ElementTree.SubElement(
+        test_suite, "testcase", name="Cppcheck success", classname="Cppcheck success", time=str(1)
+    )
     return ElementTree.ElementTree(test_suite)
 
 
@@ -163,18 +165,21 @@ def main() -> ExitStatus:  # pragma: no cover
         print(str(e))
         return ExitStatus.failure
     except ElementTree.ParseError as e:
-        print('{} is a malformed XML file. Did you use --xml-version=2?\n{}'.format(
-            args.input_file, e))
+        print(
+            "{} is a malformed XML file. Did you use --xml-version=2?\n{}".format(
+                args.input_file, e
+            )
+        )
         return ExitStatus.failure
 
     if len(errors) > 0:
         tree = generate_test_suite(errors)
     else:
         tree = generate_single_success_test_suite()
-    tree.write(args.output_file, encoding='utf-8', xml_declaration=True)
+    tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
 
     return ExitStatus.success
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     sys.exit(main())
