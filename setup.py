@@ -14,7 +14,6 @@ setup(
     python_requires=">=3.6",
     zip_safe=False,
     license="MIT",
-    license_files=["LICENSE.txt"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
