@@ -10,9 +10,6 @@ cppcheck JUnit Converter
 .. image:: https://codeclimate.com/github/johnthagen/cppcheck-junit/badges/issue_count.svg
    :target: https://codeclimate.com/github/johnthagen/cppcheck-junit
 
-.. image:: https://codecov.io/github/johnthagen/cppcheck-junit/coverage.svg
-    :target: https://codecov.io/github/johnthagen/cppcheck-junit
-
 .. image:: https://img.shields.io/pypi/v/cppcheck-junit.svg
     :target: https://pypi.python.org/pypi/cppcheck-junit
 
