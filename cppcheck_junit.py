@@ -126,7 +126,7 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
                 type="",
                 file=os.path.relpath(error.file) if error.file else "",
                 line=str(error.line),
-                message="{}: ({}) {}".format(error.line, error.severity, error.message),
+                message=f"{error.line}: ({error.severity}) {error.message}",
             )
 
     return ElementTree.ElementTree(test_suite)
@@ -165,11 +165,7 @@ def main() -> ExitStatus:  # pragma: no cover
         print(str(e))
         return ExitStatus.failure
     except ElementTree.ParseError as e:
-        print(
-            "{} is a malformed XML file. Did you use --xml-version=2?\n{}".format(
-                args.input_file, e
-            )
-        )
+        print(f"{args.input_file} is a malformed XML file. Did you use --xml-version=2?\n{e}")
         return ExitStatus.failure
 
     if len(errors) > 0:
