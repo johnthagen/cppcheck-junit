@@ -46,6 +46,14 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument("input_file", type=str, help="Cppcheck XML version 2 stderr file.")
     parser.add_argument("output_file", type=str, help="JUnit XML output file.")
+    parser.add_argument(
+        "error_exitcode",
+        type=int,
+        nargs="?",
+        const=0,
+        help="If errors are found, "
+        f"integer <n> is returned instead of default {ExitStatus.success}.",
+    )
     return parser.parse_args()
 
 
@@ -126,7 +134,7 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
                 type="",
                 file=os.path.relpath(error.file) if error.file else "",
                 line=str(error.line),
-                message="{}: ({}) {}".format(error.line, error.severity, error.message),
+                message=f"{error.line}: ({error.severity}) {error.message}",
             )
 
     return ElementTree.ElementTree(test_suite)
@@ -165,20 +173,17 @@ def main() -> ExitStatus:  # pragma: no cover
         print(str(e))
         return ExitStatus.failure
     except ElementTree.ParseError as e:
-        print(
-            "{} is a malformed XML file. Did you use --xml-version=2?\n{}".format(
-                args.input_file, e
-            )
-        )
+        print(f"{args.input_file} is a malformed XML file. Did you use --xml-version=2?\n{e}")
         return ExitStatus.failure
 
     if len(errors) > 0:
         tree = generate_test_suite(errors)
+        tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
+        return args.error_exitcode
     else:
         tree = generate_single_success_test_suite()
-    tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
-
-    return ExitStatus.success
+        tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
+        return ExitStatus.success
 
 
 if __name__ == "__main__":  # pragma: no cover
