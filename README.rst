@@ -61,6 +61,7 @@ Unreleased
 ^^^^^^^^^^
 
 - Add optional argument for setting return code when cppcheck found errors.
+- Drop Python 3.6 and support Python 3.10.
 
 2.1.0 - 2020-12-30
 ^^^^^^^^^^^^^^^^^^
