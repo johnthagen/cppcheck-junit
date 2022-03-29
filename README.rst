@@ -54,8 +54,8 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
-Unreleased
-^^^^^^^^^^
+2.2.0 - 2022-03-29
+^^^^^^^^^^^^^^^^^^
 
 - Add optional argument for setting return code when cppcheck found errors.
 - Drop Python 3.6 and support Python 3.10.
