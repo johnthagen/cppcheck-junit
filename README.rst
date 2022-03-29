@@ -57,6 +57,11 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Add optional argument for setting return code when cppcheck found errors.
+
 2.1.0 - 2020-12-30
 ^^^^^^^^^^^^^^^^^^
 
