@@ -54,6 +54,11 @@ output so that CI tools like Bamboo will not fail on the JUnit task.
 Releases
 --------
 
+Unreleased
+^^^^^^^^^^
+
+- Support Python 3.12
+
 2.3.0 - 2023-04-30
 ^^^^^^^^^^^^^^^^^^
 
