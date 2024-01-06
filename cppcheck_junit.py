@@ -16,20 +16,26 @@ from exitstatus import ExitStatus
 
 class CppcheckError:
     def __init__(
-        self, file: str, line: int, message: str, severity: str, error_id: str, verbose: str
+        self,
+        file: str,
+        sources: [(str, int, int, str)],
+        message: str,
+        severity: str,
+        error_id: str,
+        verbose: str,
     ) -> None:
         """Constructor.
 
         Args:
             file: File error originated on.
-            line: Line error originated on.
+            sources: Error sources.
             message: Error message.
             severity: Severity of the error.
             error_id: Unique identifier for the error.
             verbose: Verbose error message.
         """
         self.file = file
-        self.line = line
+        self.sources = sources
         self.message = message
         self.severity = severity
         self.error_id = error_id
@@ -80,17 +86,23 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
 
     errors = collections.defaultdict(list)
     for error_element in error_root:
-        location_element: ElementTree.Element = error_element.find("location")
-        if location_element is not None:
-            file = location_element.get("file")
-            line = int(location_element.get("line"))
-        else:
-            file = ""
-            line = 0
+        file = error_element.get("file0")
+        sources = []
+        for location in error_element.findall("location"):
+            if not file:
+                file = location.get("file")
+            sources.append(
+                (
+                    location.get("file"),
+                    int(location.get("line")),
+                    int(location.get("column")),
+                    location.get("info"),
+                )
+            )
 
         error = CppcheckError(
             file=file,
-            line=line,
+            sources=sources,
             message=error_element.get("msg"),
             severity=error_element.get("severity"),
             error_id=error_element.get("id"),
@@ -128,14 +140,29 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
             time=str(1),
         )
         for error in errors:
-            ElementTree.SubElement(
+            error_element = ElementTree.SubElement(
                 test_case,
                 "error",
-                type="",
+                type=error.severity,
                 file=os.path.relpath(error.file) if error.file else "",
-                line=str(error.line),
-                message=f"{error.line}: ({error.severity}) {error.message}",
+                message=f"{error.message}",
             )
+            if len(error.sources) == 0:
+                error_element.text = error.verbose
+            elif len(error.sources) == 1 and error.sources[0][3] == None:
+                source = error.sources[0]
+                file = os.path.relpath(source[0]) if source[0] else ""
+                line = source[1]
+                column = source[2]
+                error_element.text = f"{file}:{line}:{column}: {error.verbose}"
+            else:
+                error_element.text = error.verbose
+                for source in error.sources:
+                    file = os.path.relpath(source[0]) if source[0] else ""
+                    line = source[1]
+                    column = source[2]
+                    info = source[3]
+                    error_element.text += f"\n{file}:{line}:{column}: {info}"
 
     return ElementTree.ElementTree(test_suite)
 
