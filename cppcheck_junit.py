@@ -6,13 +6,13 @@ import argparse
 import collections
 from dataclasses import dataclass
 from datetime import datetime
-import os
 from socket import gethostname
 import sys
 from typing import Dict, List
 from xml.etree import ElementTree
 
 from exitstatus import ExitStatus
+from junitparser import Error, JUnitXml, TestCase, TestSuite
 
 
 @dataclass
@@ -100,7 +100,7 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
                 file = location.get("file", "")
             locations.append(
                 CppcheckLocation(
-                    location.get("file"),
+                    location.get("file", ""),
                     int(location.get("line", 0)),
                     int(location.get("column", 0)),
                     location.get("info", ""),
@@ -120,71 +120,71 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
     return errors
 
 
-def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.ElementTree:
-    """Converts parsed Cppcheck errors into JUnit XML tree.
+def generate_test_error(error: CppcheckError) -> Error:
+    """Converts parsed Cppcheck error into Error.
+
+    Args:
+        error: Cppcheck error
+
+    Returns:
+        Error
+    """
+
+    jerror = Error(error.message, f"{error.severity}:{error.error_id}")
+    if len(error.locations) == 0:
+        jerror.text = error.verbose
+    elif len(error.locations) == 1 and error.locations[0].info == "":
+        location = error.locations[0]
+        jerror.text = f"{location.file}:{location.line}:{location.column}: {error.verbose}"
+    else:
+        jerror.text = error.verbose
+        for location in error.locations:
+            jerror.text += f"\n{location.file}:{location.line}:{location.column}: {location.info}"
+
+    return jerror
+
+
+def generate_test_case(name: str, class_name: str, errors: List[CppcheckError]) -> TestCase:
+    """Converts parsed Cppcheck errors into TestCase.
+
+    Args:
+        name: Name for the test case
+        class_name: Class for the test case
+        errors: Parsed cppcheck errors.
+
+    Returns:
+        TestCase
+    """
+
+    test_case = TestCase(name if name else "Cppcheck", class_name, 1)
+    jerrors = []
+    for error in errors:
+        jerrors.append(generate_test_error(error))
+    test_case.result = jerrors
+
+    return test_case
+
+
+def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> TestSuite:
+    """Converts parsed Cppcheck errors into TestSuite.
 
     Args:
         errors: Parsed cppcheck errors.
 
     Returns:
-        XML test suite.
+        TestSuite
     """
-    test_suite = ElementTree.Element("testsuite")
-    test_suite.attrib["name"] = "Cppcheck errors"
-    test_suite.attrib["timestamp"] = datetime.isoformat(datetime.now())
-    test_suite.attrib["hostname"] = gethostname()
-    test_suite.attrib["tests"] = str(len(errors))
-    test_suite.attrib["failures"] = str(0)
-    test_suite.attrib["errors"] = str(len(errors))
-    test_suite.attrib["time"] = str(1)
+    test_suite = TestSuite("Cppcheck")
+    test_suite.timestamp = datetime.isoformat(datetime.now())
+    test_suite.hostname = gethostname()
 
-    for file_name, errors in errors.items():
-        test_case = ElementTree.SubElement(
-            test_suite,
-            "testcase",
-            name=os.path.relpath(file_name) if file_name else "Cppcheck error",
-            classname="Cppcheck error",
-            time=str(1),
-        )
-        for error in errors:
-            error_element = ElementTree.SubElement(
-                test_case,
-                "error",
-                type=error.severity,
-                file=os.path.relpath(error.file) if error.file else "",
-                message=f"{error.message}",
-            )
-            if len(error.locations) == 0:
-                error_element.text = error.verbose
-            elif len(error.locations) == 1 and error.locations[0].info == "":
-                location = error.locations[0]
-                file = os.path.relpath(location.file) if location.file else ""
-                error_element.text = f"{file}:{location.line}:{location.column}: {error.verbose}"
-            else:
-                error_element.text = error.verbose
-                for location in error.locations:
-                    file = os.path.relpath(location.file) if location.file else ""
-                    error_element.text += (
-                        f"\n{file}:{location.line}:{location.column}: {location.info}"
-                    )
+    if len(errors) == 0:
+        test_suite.add_testcase(generate_test_case("", "Cppcheck success", []))
 
-    return ElementTree.ElementTree(test_suite)
+    for name, cerrors in errors.items():
+        test_suite.add_testcase(generate_test_case(name, "Cppcheck error", cerrors))
 
-
-def generate_single_success_test_suite() -> ElementTree.ElementTree:
-    """Generates a single successful JUnit XML testcase."""
-    test_suite = ElementTree.Element("testsuite")
-    test_suite.attrib["name"] = "Cppcheck errors"
-    test_suite.attrib["timestamp"] = datetime.isoformat(datetime.now())
-    test_suite.attrib["hostname"] = gethostname()
-    test_suite.attrib["tests"] = str(1)
-    test_suite.attrib["failures"] = str(0)
-    test_suite.attrib["errors"] = str(0)
-    test_suite.attrib["time"] = str(1)
-    ElementTree.SubElement(
-        test_suite, "testcase", name="Cppcheck success", classname="Cppcheck success", time=str(1)
-    )
-    return ElementTree.ElementTree(test_suite)
+    return test_suite
 
 
 def main() -> ExitStatus:  # pragma: no cover
@@ -207,14 +207,10 @@ def main() -> ExitStatus:  # pragma: no cover
         print(f"{args.input_file} is a malformed XML file. Did you use --xml-version=2?\n{e}")
         return ExitStatus.failure
 
-    if len(errors) > 0:
-        tree = generate_test_suite(errors)
-        tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
-        return args.error_exitcode
-    else:
-        tree = generate_single_success_test_suite()
-        tree.write(args.output_file, encoding="utf-8", xml_declaration=True)
-        return ExitStatus.success
+    tree = JUnitXml("Cppcheck")
+    tree.add_testsuite(generate_test_suite(errors))
+    tree.write(args.output_file)
+    return args.error_exitcode if len(errors) > 0 else ExitStatus.success
 
 
 if __name__ == "__main__":  # pragma: no cover
