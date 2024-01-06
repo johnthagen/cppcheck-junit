@@ -14,11 +14,27 @@ from xml.etree import ElementTree
 from exitstatus import ExitStatus
 
 
+class CppcheckLocation:
+    def __init__(self, file: str, line: int, column: int, info: str) -> None:
+        """Constructor.
+        Args:
+            file: Error location file.
+            line: Error location line.
+            column: Error location column.
+            info: Error location info.
+        """
+
+        self.file = file
+        self.line = line
+        self.column = column
+        self.info = info
+
+
 class CppcheckError:
     def __init__(
         self,
         file: str,
-        sources: [(str, int, int, str)],
+        locations: [CppcheckLocation],
         message: str,
         severity: str,
         error_id: str,
@@ -28,14 +44,14 @@ class CppcheckError:
 
         Args:
             file: File error originated on.
-            sources: Error sources.
+            locations: Error locations.
             message: Error message.
             severity: Severity of the error.
             error_id: Unique identifier for the error.
             verbose: Verbose error message.
         """
         self.file = file
-        self.sources = sources
+        self.locations = locations
         self.message = message
         self.severity = severity
         self.error_id = error_id
@@ -86,27 +102,27 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
 
     errors = collections.defaultdict(list)
     for error_element in error_root:
-        file = error_element.get("file0")
-        sources = []
+        file = error_element.get("file0", "")
+        locations = []
         for location in error_element.findall("location"):
             if not file:
-                file = location.get("file")
-            sources.append(
-                (
+                file = location.get("file", "")
+            locations.append(
+                CppcheckLocation(
                     location.get("file"),
-                    int(location.get("line")),
-                    int(location.get("column")),
-                    location.get("info"),
+                    int(location.get("line", 0)),
+                    int(location.get("column", 0)),
+                    location.get("info", ""),
                 )
             )
 
         error = CppcheckError(
             file=file,
-            sources=sources,
-            message=error_element.get("msg"),
-            severity=error_element.get("severity"),
-            error_id=error_element.get("id"),
-            verbose=error_element.get("verbose"),
+            locations=locations,
+            message=error_element.get("msg", ""),
+            severity=error_element.get("severity", ""),
+            error_id=error_element.get("id", ""),
+            verbose=error_element.get("verbose", ""),
         )
         errors[error.file].append(error)
 
@@ -147,22 +163,19 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
                 file=os.path.relpath(error.file) if error.file else "",
                 message=f"{error.message}",
             )
-            if len(error.sources) == 0:
+            if len(error.locations) == 0:
                 error_element.text = error.verbose
-            elif len(error.sources) == 1 and error.sources[0][3] == None:
-                source = error.sources[0]
-                file = os.path.relpath(source[0]) if source[0] else ""
-                line = source[1]
-                column = source[2]
-                error_element.text = f"{file}:{line}:{column}: {error.verbose}"
+            elif len(error.locations) == 1 and error.locations[0].info == "":
+                location = error.locations[0]
+                file = os.path.relpath(location.file) if location.file else ""
+                error_element.text = f"{file}:{location.line}:{location.column}: {error.verbose}"
             else:
                 error_element.text = error.verbose
-                for source in error.sources:
-                    file = os.path.relpath(source[0]) if source[0] else ""
-                    line = source[1]
-                    column = source[2]
-                    info = source[3]
-                    error_element.text += f"\n{file}:{line}:{column}: {info}"
+                for location in error.locations:
+                    file = os.path.relpath(location.file) if location.file else ""
+                    error_element.text += (
+                        f"\n{file}:{location.line}:{location.column}: {location.info}"
+                    )
 
     return ElementTree.ElementTree(test_suite)
 
