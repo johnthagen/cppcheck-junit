@@ -4,6 +4,7 @@
 
 import argparse
 import collections
+from dataclasses import dataclass
 from datetime import datetime
 import os
 from socket import gethostname
@@ -14,48 +15,38 @@ from xml.etree import ElementTree
 from exitstatus import ExitStatus
 
 
+@dataclass
 class CppcheckLocation:
-    def __init__(self, file: str, line: int, column: int, info: str) -> None:
-        """Constructor.
-        Args:
-            file: Error location file.
-            line: Error location line.
-            column: Error location column.
-            info: Error location info.
-        """
+    """
+    file: Error location file.
+    line: Error location line.
+    column: Error location column.
+    info: Error location info.
+    """
 
-        self.file = file
-        self.line = line
-        self.column = column
-        self.info = info
+    file: str
+    line: int
+    column: int
+    info: str
 
 
+@dataclass
 class CppcheckError:
-    def __init__(
-        self,
-        file: str,
-        locations: [CppcheckLocation],
-        message: str,
-        severity: str,
-        error_id: str,
-        verbose: str,
-    ) -> None:
-        """Constructor.
+    """
+    file: File error originated on.
+    locations: Error locations.
+    message: Error message.
+    severity: Severity of the error.
+    error_id: Unique identifier for the error.
+    verbose: Verbose error message.
+    """
 
-        Args:
-            file: File error originated on.
-            locations: Error locations.
-            message: Error message.
-            severity: Severity of the error.
-            error_id: Unique identifier for the error.
-            verbose: Verbose error message.
-        """
-        self.file = file
-        self.locations = locations
-        self.message = message
-        self.severity = severity
-        self.error_id = error_id
-        self.verbose = verbose
+    file: str
+    locations: List[CppcheckLocation]
+    message: str
+    severity: str
+    error_id: str
+    verbose: str
 
 
 def parse_arguments() -> argparse.Namespace:
