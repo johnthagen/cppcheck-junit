@@ -4,6 +4,7 @@
 
 import argparse
 import collections
+from dataclasses import dataclass
 from datetime import datetime
 import os
 from socket import gethostname
@@ -14,26 +15,38 @@ from xml.etree import ElementTree
 from exitstatus import ExitStatus
 
 
-class CppcheckError:
-    def __init__(
-        self, file: str, line: int, message: str, severity: str, error_id: str, verbose: str
-    ) -> None:
-        """Constructor.
+@dataclass
+class CppcheckLocation:
+    """
+    file: Error location file.
+    line: Error location line.
+    column: Error location column.
+    info: Error location info.
+    """
 
-        Args:
-            file: File error originated on.
-            line: Line error originated on.
-            message: Error message.
-            severity: Severity of the error.
-            error_id: Unique identifier for the error.
-            verbose: Verbose error message.
-        """
-        self.file = file
-        self.line = line
-        self.message = message
-        self.severity = severity
-        self.error_id = error_id
-        self.verbose = verbose
+    file: str
+    line: int
+    column: int
+    info: str
+
+
+@dataclass
+class CppcheckError:
+    """
+    file: File error originated on.
+    locations: Error locations.
+    message: Error message.
+    severity: Severity of the error.
+    error_id: Unique identifier for the error.
+    verbose: Verbose error message.
+    """
+
+    file: str
+    locations: List[CppcheckLocation]
+    message: str
+    severity: str
+    error_id: str
+    verbose: str
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -80,21 +93,27 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
 
     errors = collections.defaultdict(list)
     for error_element in error_root:
-        location_element: ElementTree.Element = error_element.find("location")
-        if location_element is not None:
-            file = location_element.get("file")
-            line = int(location_element.get("line"))
-        else:
-            file = ""
-            line = 0
+        file = error_element.get("file0", "")
+        locations = []
+        for location in error_element.findall("location"):
+            if not file:
+                file = location.get("file", "")
+            locations.append(
+                CppcheckLocation(
+                    location.get("file"),
+                    int(location.get("line", 0)),
+                    int(location.get("column", 0)),
+                    location.get("info", ""),
+                )
+            )
 
         error = CppcheckError(
             file=file,
-            line=line,
-            message=error_element.get("msg"),
-            severity=error_element.get("severity"),
-            error_id=error_element.get("id"),
-            verbose=error_element.get("verbose"),
+            locations=locations,
+            message=error_element.get("msg", ""),
+            severity=error_element.get("severity", ""),
+            error_id=error_element.get("id", ""),
+            verbose=error_element.get("verbose", ""),
         )
         errors[error.file].append(error)
 
@@ -128,14 +147,26 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> ElementTree.E
             time=str(1),
         )
         for error in errors:
-            ElementTree.SubElement(
+            error_element = ElementTree.SubElement(
                 test_case,
                 "error",
-                type="",
+                type=error.severity,
                 file=os.path.relpath(error.file) if error.file else "",
-                line=str(error.line),
-                message=f"{error.line}: ({error.severity}) {error.message}",
+                message=f"{error.message}",
             )
+            if len(error.locations) == 0:
+                error_element.text = error.verbose
+            elif len(error.locations) == 1 and error.locations[0].info == "":
+                location = error.locations[0]
+                file = os.path.relpath(location.file) if location.file else ""
+                error_element.text = f"{file}:{location.line}:{location.column}: {error.verbose}"
+            else:
+                error_element.text = error.verbose
+                for location in error.locations:
+                    file = os.path.relpath(location.file) if location.file else ""
+                    error_element.text += (
+                        f"\n{file}:{location.line}:{location.column}: {location.info}"
+                    )
 
     return ElementTree.ElementTree(test_suite)
 

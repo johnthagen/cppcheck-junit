@@ -10,6 +10,7 @@ from xml.etree import ElementTree
 
 from cppcheck_junit import (
     CppcheckError,
+    CppcheckLocation,
     generate_single_success_test_suite,
     generate_test_suite,
     parse_arguments,
@@ -27,13 +28,13 @@ class ParseCppcheckTestCase(unittest.TestCase):
         errors = parse_cppcheck("tests/cppcheck-out-bad.xml")
 
         self.assertEqual(errors[file1][0].file, file1)
-        self.assertEqual(errors[file1][0].line, 4)
+        self.assertEqual(errors[file1][0].locations[0].line, 4)
         self.assertEqual(
             errors[file1][0].message, "Variable 'a' is assigned a value that is never used."
         )
 
         self.assertEqual(errors[file1][1].file, file1)
-        self.assertEqual(errors[file1][1].line, 4)
+        self.assertEqual(errors[file1][1].locations[0].line, 4)
         self.assertEqual(
             errors[file1][1].message, "Array 'a[10]' accessed at index 10, which is out of bounds."
         )
@@ -45,7 +46,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         error = errors[file][0]
         self.assertEqual(error.file, file)
-        self.assertEqual(error.line, 0)
+        self.assertEqual(error.locations, [])
         self.assertEqual(
             error.message,
             "Too many #ifdef configurations - cppcheck only checks 12 configurations. "
@@ -61,7 +62,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         error = errors[file][0]
         self.assertEqual(error.file, file)
-        self.assertEqual(error.line, 0)
+        self.assertEqual(error.locations, [])
         self.assertEqual(
             error.message,
             "Cppcheck cannot find all the include files (use --check-config for details)",
@@ -78,25 +79,25 @@ class ParseCppcheckTestCase(unittest.TestCase):
         errors = parse_cppcheck("tests/cppcheck-out-all.xml")
 
         self.assertEqual(errors[file1][0].file, file1)
-        self.assertEqual(errors[file1][0].line, 4)
+        self.assertEqual(errors[file1][0].locations[0].line, 4)
         self.assertEqual(
             errors[file1][0].message, "Variable 'a' is assigned a value that is never used."
         )
 
         self.assertEqual(errors[file1][1].file, file1)
-        self.assertEqual(errors[file1][1].line, 4)
+        self.assertEqual(errors[file1][1].locations[0].line, 4)
         self.assertEqual(
             errors[file1][1].message, "Array 'a[10]' accessed at index 10, which is out of bounds."
         )
 
         self.assertEqual(errors[file2][0].file, file2)
-        self.assertEqual(errors[file2][0].line, 4)
+        self.assertEqual(errors[file2][0].locations[0].line, 4)
         self.assertEqual(
             errors[file2][0].message, "Variable 'a' is assigned a value that is never used."
         )
 
         self.assertEqual(errors[file2][1].file, file2)
-        self.assertEqual(errors[file2][1].line, 4)
+        self.assertEqual(errors[file2][1].locations[0].line, 4)
         self.assertEqual(
             errors[file2][1].message, "Array 'a[10]' accessed at index 10, which is out of bounds."
         )
@@ -136,7 +137,7 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
             "file_name": [
                 CppcheckError(
                     "file_name",
-                    4,
+                    [CppcheckLocation("file_name", 4, 0, "")],
                     "error message",
                     "severity",
                     "error_id",
@@ -161,8 +162,9 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
 
         error_element = testcase_element.find("error")
         self.assertEqual(error_element.get("file"), "file_name")
-        self.assertEqual(error_element.get("line"), str(4))
-        self.assertEqual(error_element.get("message"), "4: (severity) error message")
+        self.assertEqual(error_element.get("type"), "severity")
+        self.assertEqual(error_element.get("message"), "error message")
+        self.assertEqual(error_element.text, "file_name:4:0: verbose error message")
         # Check that error element is compliant with the spec
         for required_attribute in self.junit_error_attributes:
             self.assertTrue(required_attribute in error_element.attrib.keys())
@@ -172,7 +174,7 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
             "": [
                 CppcheckError(
                     file="",
-                    line=0,
+                    locations=[],
                     message="Too many #ifdef configurations - cppcheck only checks "
                     "12 configurations. Use --force to check all "
                     "configurations. For more details, use "
@@ -206,13 +208,63 @@ class GenerateTestSuiteTestCase(unittest.TestCase):
 
         error_element = testcase_element.find("error")
         self.assertEqual(error_element.get("file"), "")
-        self.assertEqual(error_element.get("line"), str(0))
         self.assertEqual(
             error_element.get("message"),
-            "0: (information) Too many #ifdef configurations - cppcheck only checks "
+            "Too many #ifdef configurations - cppcheck only checks "
             "12 configurations. Use --force to check all "
             "configurations. For more details, use "
             "--enable=information.",
+        )
+        self.assertEqual(
+            error_element.text,
+            "The checking of the file will be interrupted because "
+            "there are too many #ifdef configurations. Checking of "
+            "all #ifdef configurations can be forced by --force "
+            "command line option or from GUI preferences. However "
+            "that may increase the checking time. For more details, "
+            "use --enable=information.",
+        )
+        # Check that error element is compliant with the spec
+        for required_attribute in self.junit_error_attributes:
+            self.assertTrue(required_attribute in error_element.attrib.keys())
+
+    def test_multiple(self) -> None:
+        errors = {
+            "file_name": [
+                CppcheckError(
+                    "file_name",
+                    [
+                        CppcheckLocation("file_name", 4, 0, "info"),
+                        CppcheckLocation("file_name", 5, 0, "info"),
+                    ],
+                    "error message",
+                    "severity",
+                    "error_id",
+                    "verbose error message",
+                )
+            ]
+        }
+        tree = generate_test_suite(errors)
+        testsuite_element = tree.getroot()
+        self.assertEqual(testsuite_element.get("errors"), str(1))
+        self.assertEqual(testsuite_element.get("failures"), str(0))
+        self.assertEqual(testsuite_element.get("tests"), str(1))
+        # Check that testsuite element is compliant with the spec
+        for required_attribute in self.junit_testsuite_attributes:
+            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
+
+        testcase_element = testsuite_element.find("testcase")
+        self.assertEqual(testcase_element.get("name"), "file_name")
+        # Check that test_case is compliant with the spec
+        for required_attribute in self.junit_testcase_attributes:
+            self.assertTrue(required_attribute in testcase_element.attrib.keys())
+
+        error_element = testcase_element.find("error")
+        self.assertEqual(error_element.get("file"), "file_name")
+        self.assertEqual(error_element.get("type"), "severity")
+        self.assertEqual(error_element.get("message"), "error message")
+        self.assertEqual(
+            error_element.text, "verbose error message\nfile_name:4:0: info\nfile_name:5:0: info"
         )
         # Check that error element is compliant with the spec
         for required_attribute in self.junit_error_attributes:
