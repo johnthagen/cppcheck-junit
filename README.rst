@@ -58,6 +58,7 @@ Unreleased
 ^^^^^^^^^^
 
 - Support Python 3.12
+- Include error info from multiple locations
 
 2.3.0 - 2023-04-30
 ^^^^^^^^^^^^^^^^^^
