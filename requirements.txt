@@ -1,1 +1,2 @@
 exitstatus>=1.0.0
+junitparser>=3.0.0

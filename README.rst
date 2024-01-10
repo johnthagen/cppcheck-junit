@@ -59,6 +59,7 @@ Unreleased
 
 - Support Python 3.12
 - Include error info from multiple locations
+- Added ``junitparser`` as a dependency to write junit output.
 
 2.3.0 - 2023-04-30
 ^^^^^^^^^^^^^^^^^^

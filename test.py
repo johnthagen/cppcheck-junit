@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from copy import deepcopy
 import sys
 import unittest
 from xml.etree import ElementTree
@@ -11,7 +12,8 @@ from xml.etree import ElementTree
 from cppcheck_junit import (
     CppcheckError,
     CppcheckLocation,
-    generate_single_success_test_suite,
+    generate_test_case,
+    generate_test_error,
     generate_test_suite,
     parse_arguments,
     parse_cppcheck,
@@ -39,13 +41,12 @@ class ParseCppcheckTestCase(unittest.TestCase):
             errors[file1][1].message, "Array 'a[10]' accessed at index 10, which is out of bounds."
         )
 
-    def test_no_location_element(self) -> None:
-        file = ""
+    def test_no_file_no_location(self) -> None:
         errors = parse_cppcheck("tests/cppcheck-out-no-location-element.xml")
 
         self.assertEqual(len(errors), 1)
-        error = errors[file][0]
-        self.assertEqual(error.file, file)
+        error = errors[""][0]
+        self.assertEqual(error.file, "")
         self.assertEqual(error.locations, [])
         self.assertEqual(
             error.message,
@@ -54,20 +55,7 @@ class ParseCppcheckTestCase(unittest.TestCase):
             "--enable=information.",
         )
         self.assertEqual(error.severity, "information")
-
-    def test_missing_include_no_location_element(self) -> None:
-        file = ""
-        errors = parse_cppcheck("tests/cppcheck-out-missing-include-no-location-element.xml")
-
-        self.assertEqual(len(errors), 1)
-        error = errors[file][0]
-        self.assertEqual(error.file, file)
-        self.assertEqual(error.locations, [])
-        self.assertEqual(
-            error.message,
-            "Cppcheck cannot find all the include files (use --check-config for details)",
-        )
-        self.assertEqual(error.severity, "information")
+        self.assertEqual(error.error_id, "toomanyconfigs")
 
     def test_bad_large(self) -> None:
         errors = parse_cppcheck("tests/cppcheck-out-bad-large.xml")
@@ -115,194 +103,89 @@ class ParseCppcheckTestCase(unittest.TestCase):
             parse_cppcheck("tests/cppcheck-out-malformed.xml")
 
 
-class GenerateTestSuiteTestCase(unittest.TestCase):
-    # Expected attributes from JUnit XSD
-    #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
-    # @TODO: Better thing to do here would be to curl or otherwise access the
-    #        spec above instead of hardcoding pieces of it here
-    junit_testsuite_attributes = [
-        "name",
-        "timestamp",
-        "hostname",
-        "tests",
-        "failures",
-        "errors",
-        "time",
-    ]
-    junit_testcase_attributes = ["name", "classname", "time"]
-    junit_error_attributes = ["type"]
+class GenerateTestError(unittest.TestCase):
+    basic_error = CppcheckError("file", [], "message", "severity", "error_id", "verbose")
+
+    def test_no_location(self) -> None:
+        cppcheck_error = deepcopy(self.basic_error)
+        error = generate_test_error(cppcheck_error)
+        self.assertEqual(error.type, "severity:error_id")
+        self.assertEqual(error.message, "message")
+        self.assertEqual(error.text, "verbose")
+
+    def test_location_no_info(self) -> None:
+        cppcheck_error = deepcopy(self.basic_error)
+        cppcheck_error.locations = [CppcheckLocation("file1", 1, 0, "")]
+        error = generate_test_error(cppcheck_error)
+        self.assertEqual(error.type, "severity:error_id")
+        self.assertEqual(error.message, "message")
+        self.assertEqual(error.text, "file1:1:0: verbose")
+
+    def test_location_with_info(self) -> None:
+        cppcheck_error = deepcopy(self.basic_error)
+        cppcheck_error.locations = [CppcheckLocation("file1", 1, 0, "info")]
+        error = generate_test_error(cppcheck_error)
+        self.assertEqual(error.type, "severity:error_id")
+        self.assertEqual(error.message, "message")
+        self.assertEqual(error.text, "verbose\nfile1:1:0: info")
+
+    def test_locations(self) -> None:
+        cppcheck_error = deepcopy(self.basic_error)
+        cppcheck_error.locations = [
+            CppcheckLocation("file1", 1, 0, "info"),
+            CppcheckLocation("file2", 2, 0, "info"),
+        ]
+        error = generate_test_error(cppcheck_error)
+        self.assertEqual(error.type, "severity:error_id")
+        self.assertEqual(error.message, "message")
+        self.assertEqual(error.text, "verbose\nfile1:1:0: info\nfile2:2:0: info")
+
+
+class GenerateTestCase(unittest.TestCase):
+    def test_no_name(self) -> None:
+        testcase = generate_test_case("", "class", [])
+        self.assertEqual(testcase.name, "Cppcheck")
+        self.assertEqual(testcase.classname, "class")
+
+    def test_with_name(self) -> None:
+        testcase = generate_test_case("name", "class", [])
+        self.assertEqual(testcase.name, "name")
+        self.assertEqual(testcase.classname, "class")
+
+
+class GenerateTestSuite(unittest.TestCase):
+    error = CppcheckError("", [], "", "", "", "")
+
+    def test_no_error(self) -> None:
+        testsuite = generate_test_suite({})
+        self.assertEqual(testsuite.errors, 0)
+        self.assertEqual(testsuite.failures, 0)
+        self.assertEqual(testsuite.skipped, 0)
+        self.assertEqual(testsuite.tests, 1)
 
     def test_single(self) -> None:
-        errors = {
-            "file_name": [
-                CppcheckError(
-                    "file_name",
-                    [CppcheckLocation("file_name", 4, 0, "")],
-                    "error message",
-                    "severity",
-                    "error_id",
-                    "verbose error message",
-                )
-            ]
-        }
-        tree = generate_test_suite(errors)
-        testsuite_element = tree.getroot()
-        self.assertEqual(testsuite_element.get("errors"), str(1))
-        self.assertEqual(testsuite_element.get("failures"), str(0))
-        self.assertEqual(testsuite_element.get("tests"), str(1))
-        # Check that testsuite element is compliant with the spec
-        for required_attribute in self.junit_testsuite_attributes:
-            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
+        errors = {"file": [self.error]}
+        testsuite = generate_test_suite(errors)
+        self.assertEqual(testsuite.errors, 1)
+        self.assertEqual(testsuite.failures, 0)
+        self.assertEqual(testsuite.skipped, 0)
+        self.assertEqual(testsuite.tests, 1)
 
-        testcase_element = testsuite_element.find("testcase")
-        self.assertEqual(testcase_element.get("name"), "file_name")
-        # Check that test_case is compliant with the spec
-        for required_attribute in self.junit_testcase_attributes:
-            self.assertTrue(required_attribute in testcase_element.attrib.keys())
-
-        error_element = testcase_element.find("error")
-        self.assertEqual(error_element.get("file"), "file_name")
-        self.assertEqual(error_element.get("type"), "severity")
-        self.assertEqual(error_element.get("message"), "error message")
-        self.assertEqual(error_element.text, "file_name:4:0: verbose error message")
-        # Check that error element is compliant with the spec
-        for required_attribute in self.junit_error_attributes:
-            self.assertTrue(required_attribute in error_element.attrib.keys())
-
-    def test_missing_file(self) -> None:
-        errors = {
-            "": [
-                CppcheckError(
-                    file="",
-                    locations=[],
-                    message="Too many #ifdef configurations - cppcheck only checks "
-                    "12 configurations. Use --force to check all "
-                    "configurations. For more details, use "
-                    "--enable=information.",
-                    severity="information",
-                    error_id="toomanyconfigs",
-                    verbose="The checking of the file will be interrupted because "
-                    "there are too many #ifdef configurations. Checking of "
-                    "all #ifdef configurations can be forced by --force "
-                    "command line option or from GUI preferences. However "
-                    "that may increase the checking time. For more details, "
-                    "use --enable=information.",
-                )
-            ]
-        }
-        tree = generate_test_suite(errors)
-        testsuite_element = tree.getroot()
-        self.assertEqual(testsuite_element.get("errors"), str(1))
-        self.assertEqual(testsuite_element.get("failures"), str(0))
-        self.assertEqual(testsuite_element.get("tests"), str(1))
-        # Check that testsuite element is compliant with the spec
-        for required_attribute in self.junit_testsuite_attributes:
-            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
-
-        testcase_element = testsuite_element.find("testcase")
-        self.assertEqual(testcase_element.get("name"), "Cppcheck error")
-        self.assertEqual(testcase_element.get("classname"), "Cppcheck error")
-        # Check that test_case is compliant with the spec
-        for required_attribute in self.junit_testcase_attributes:
-            self.assertTrue(required_attribute in testcase_element.attrib.keys())
-
-        error_element = testcase_element.find("error")
-        self.assertEqual(error_element.get("file"), "")
-        self.assertEqual(
-            error_element.get("message"),
-            "Too many #ifdef configurations - cppcheck only checks "
-            "12 configurations. Use --force to check all "
-            "configurations. For more details, use "
-            "--enable=information.",
-        )
-        self.assertEqual(
-            error_element.text,
-            "The checking of the file will be interrupted because "
-            "there are too many #ifdef configurations. Checking of "
-            "all #ifdef configurations can be forced by --force "
-            "command line option or from GUI preferences. However "
-            "that may increase the checking time. For more details, "
-            "use --enable=information.",
-        )
-        # Check that error element is compliant with the spec
-        for required_attribute in self.junit_error_attributes:
-            self.assertTrue(required_attribute in error_element.attrib.keys())
+    def test_single_multiple_error(self) -> None:
+        errors = {"file": [self.error, self.error]}
+        testsuite = generate_test_suite(errors)
+        self.assertEqual(testsuite.errors, 2)
+        self.assertEqual(testsuite.failures, 0)
+        self.assertEqual(testsuite.skipped, 0)
+        self.assertEqual(testsuite.tests, 1)
 
     def test_multiple(self) -> None:
-        errors = {
-            "file_name": [
-                CppcheckError(
-                    "file_name",
-                    [
-                        CppcheckLocation("file_name", 4, 0, "info"),
-                        CppcheckLocation("file_name", 5, 0, "info"),
-                    ],
-                    "error message",
-                    "severity",
-                    "error_id",
-                    "verbose error message",
-                )
-            ]
-        }
-        tree = generate_test_suite(errors)
-        testsuite_element = tree.getroot()
-        self.assertEqual(testsuite_element.get("errors"), str(1))
-        self.assertEqual(testsuite_element.get("failures"), str(0))
-        self.assertEqual(testsuite_element.get("tests"), str(1))
-        # Check that testsuite element is compliant with the spec
-        for required_attribute in self.junit_testsuite_attributes:
-            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
-
-        testcase_element = testsuite_element.find("testcase")
-        self.assertEqual(testcase_element.get("name"), "file_name")
-        # Check that test_case is compliant with the spec
-        for required_attribute in self.junit_testcase_attributes:
-            self.assertTrue(required_attribute in testcase_element.attrib.keys())
-
-        error_element = testcase_element.find("error")
-        self.assertEqual(error_element.get("file"), "file_name")
-        self.assertEqual(error_element.get("type"), "severity")
-        self.assertEqual(error_element.get("message"), "error message")
-        self.assertEqual(
-            error_element.text, "verbose error message\nfile_name:4:0: info\nfile_name:5:0: info"
-        )
-        # Check that error element is compliant with the spec
-        for required_attribute in self.junit_error_attributes:
-            self.assertTrue(required_attribute in error_element.attrib.keys())
-
-
-class GenerateSingleSuccessTestSuite(unittest.TestCase):
-    # Expected attributes from JUnit XSD
-    #   ref: https://raw.githubusercontent.com/windyroad/JUnit-Schema/master/JUnit.xsd
-    # @TODO: Better thing to do here would be to curl or otherwise access the
-    #        spec above instead of hardcoding pieces of it here
-    junit_testsuite_attributes = [
-        "name",
-        "timestamp",
-        "hostname",
-        "tests",
-        "failures",
-        "errors",
-        "time",
-    ]
-    junit_testcase_attributes = ["name", "classname", "time"]
-
-    def test(self) -> None:
-        tree = generate_single_success_test_suite()
-        testsuite_element = tree.getroot()
-        self.assertEqual(testsuite_element.get("tests"), str(1))
-        self.assertEqual(testsuite_element.get("errors"), str(0))
-        self.assertEqual(testsuite_element.get("failures"), str(0))
-        # Check that testsuite element is compliant with the spec
-        for required_attribute in self.junit_testsuite_attributes:
-            self.assertTrue(required_attribute in testsuite_element.attrib.keys())
-
-        testcase_element = testsuite_element.find("testcase")
-        self.assertEqual(testcase_element.get("name"), "Cppcheck success")
-        self.assertEqual(testcase_element.get("classname"), "Cppcheck success")
-        # Check that test_case is compliant with the spec
-        for required_attribute in self.junit_testcase_attributes:
-            self.assertTrue(required_attribute in testcase_element.attrib.keys())
+        errors = {"file1": [self.error], "file2": [self.error]}
+        testsuite = generate_test_suite(errors)
+        self.assertEqual(testsuite.errors, 2)
+        self.assertEqual(testsuite.failures, 0)
+        self.assertEqual(testsuite.skipped, 0)
+        self.assertEqual(testsuite.tests, 2)
 
 
 class ParseArgumentsTestCase(unittest.TestCase):
