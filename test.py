@@ -102,6 +102,10 @@ class ParseCppcheckTestCase(unittest.TestCase):
         with self.assertRaises(ElementTree.ParseError):
             parse_cppcheck("tests/cppcheck-out-malformed.xml")
 
+    def test_malformed_no_errors(self) -> None:
+        errors = parse_cppcheck("tests/cppcheck-malformed-no-errors.xml")
+        self.assertEqual(errors, {})
+
 
 class GenerateTestError(unittest.TestCase):
     basic_error = CppcheckError("file", [], "message", "severity", "error_id", "verbose")

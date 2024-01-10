@@ -5,6 +5,10 @@ build-backend = "setuptools.build_meta"
 [tool.mypy]
 ignore_missing_imports = true
 strict = true
+untyped_calls_exclude = "junitparser"
+[[tool.mypy.overrides]]
+module = "junitparser"
+implicit_reexport = true
 
 [tool.black]
 line-length = 99
