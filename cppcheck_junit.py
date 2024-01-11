@@ -49,7 +49,7 @@ class CppcheckError:
     verbose: str
 
 
-def parse_arguments() -> argparse.Namespace:
+def parse_arguments(args: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Converts Cppcheck XML version 2 to JUnit XML format.\n"
         "Usage:\n"
@@ -67,7 +67,7 @@ def parse_arguments() -> argparse.Namespace:
         help="If errors are found, "
         f"integer <n> is returned instead of default {ExitStatus.success}.",
     )
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
 def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
@@ -193,7 +193,7 @@ def main() -> int:  # pragma: no cover
     Returns:
         Exit code.
     """
-    args = parse_arguments()
+    args = parse_arguments(sys.argv[1:])
 
     try:
         errors = parse_cppcheck(args.input_file)
