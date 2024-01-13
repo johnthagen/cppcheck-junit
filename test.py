@@ -5,9 +5,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from copy import deepcopy
-import sys
 import unittest
 from xml.etree import ElementTree
+
+from exitstatus import ExitStatus
 
 from cppcheck_junit import (
     CppcheckError,
@@ -102,6 +103,10 @@ class ParseCppcheckTestCase(unittest.TestCase):
         with self.assertRaises(ElementTree.ParseError):
             parse_cppcheck("tests/cppcheck-out-malformed.xml")
 
+    def test_malformed_no_errors(self) -> None:
+        errors = parse_cppcheck("tests/cppcheck-malformed-no-errors.xml")
+        self.assertEqual(errors, {})
+
 
 class GenerateTestError(unittest.TestCase):
     basic_error = CppcheckError("file", [], "message", "severity", "error_id", "verbose")
@@ -189,12 +194,26 @@ class GenerateTestSuite(unittest.TestCase):
 
 
 class ParseArgumentsTestCase(unittest.TestCase):
-    def test_no_arguments(self) -> None:
+    def test_empty(self) -> None:
         with self.assertRaises(SystemExit):
-            # Suppress argparse stderr.
-            class NullWriter:
-                def write(self, s: str) -> None:
-                    pass
+            parse_arguments([])
 
-            sys.stderr = NullWriter()
-            parse_arguments()
+    def test_one_arg(self) -> None:
+        with self.assertRaises(SystemExit):
+            parse_arguments(["h"])
+
+    def test_two_args(self) -> None:
+        args = parse_arguments(["input", "output"])
+        self.assertEqual(args.input_file, "input")
+        self.assertEqual(args.output_file, "output")
+        self.assertEqual(args.error_exitcode, ExitStatus.success)
+
+    def test_three_args(self) -> None:
+        args = parse_arguments(["input", "output", "1"])
+        self.assertEqual(args.input_file, "input")
+        self.assertEqual(args.output_file, "output")
+        self.assertEqual(args.error_exitcode, 1)
+
+    def test_invalid_exitcode(self) -> None:
+        with self.assertRaises(SystemExit):
+            parse_arguments(["input", "output", "a"])

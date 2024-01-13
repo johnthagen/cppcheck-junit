@@ -59,7 +59,9 @@ Unreleased
 
 - Support Python 3.12
 - Include error info from multiple locations
-- Added ``junitparser`` as a dependency to write junit output.
+- Added ``junitparser`` as a dependency to write junit output
+- Update unitests for argument parser
+- Enable mypy for type checking
 
 2.3.0 - 2023-04-30
 ^^^^^^^^^^^^^^^^^^

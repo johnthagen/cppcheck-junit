@@ -49,7 +49,7 @@ class CppcheckError:
     verbose: str
 
 
-def parse_arguments() -> argparse.Namespace:
+def parse_arguments(args: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Converts Cppcheck XML version 2 to JUnit XML format.\n"
         "Usage:\n"
@@ -63,11 +63,11 @@ def parse_arguments() -> argparse.Namespace:
         "error_exitcode",
         type=int,
         nargs="?",
-        const=0,
+        default=ExitStatus.success,
         help="If errors are found, "
         f"integer <n> is returned instead of default {ExitStatus.success}.",
     )
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
 def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
@@ -86,36 +86,36 @@ def parse_cppcheck(file_name: str) -> Dict[str, List[CppcheckError]]:
     """
     root: ElementTree.Element = ElementTree.parse(file_name).getroot()
 
-    if root.get("version") is None or int(root.get("version")) != 2:
+    if int(root.get("version", "0")) != 2:
         raise ValueError("Parser only supports Cppcheck XML version 2.  Use --xml-version=2.")
 
     error_root = root.find("errors")
-
     errors = collections.defaultdict(list)
-    for error_element in error_root:
-        file = error_element.get("file0", "")
-        locations = []
-        for location in error_element.findall("location"):
-            if not file:
-                file = location.get("file", "")
-            locations.append(
-                CppcheckLocation(
-                    location.get("file", ""),
-                    int(location.get("line", 0)),
-                    int(location.get("column", 0)),
-                    location.get("info", ""),
+    if error_root is not None:
+        for error_element in error_root:
+            file = error_element.get("file0", "")
+            locations = []
+            for location in error_element.findall("location"):
+                if not file:
+                    file = location.get("file", "")
+                locations.append(
+                    CppcheckLocation(
+                        location.get("file", ""),
+                        int(location.get("line", 0)),
+                        int(location.get("column", 0)),
+                        location.get("info", ""),
+                    )
                 )
-            )
 
-        error = CppcheckError(
-            file=file,
-            locations=locations,
-            message=error_element.get("msg", ""),
-            severity=error_element.get("severity", ""),
-            error_id=error_element.get("id", ""),
-            verbose=error_element.get("verbose", ""),
-        )
-        errors[error.file].append(error)
+            error = CppcheckError(
+                file=file,
+                locations=locations,
+                message=error_element.get("msg", ""),
+                severity=error_element.get("severity", ""),
+                error_id=error_element.get("id", ""),
+                verbose=error_element.get("verbose", ""),
+            )
+            errors[error.file].append(error)
 
     return errors
 
@@ -187,13 +187,13 @@ def generate_test_suite(errors: Dict[str, List[CppcheckError]]) -> TestSuite:
     return test_suite
 
 
-def main() -> ExitStatus:  # pragma: no cover
+def main() -> int:  # pragma: no cover
     """Main function.
 
     Returns:
         Exit code.
     """
-    args = parse_arguments()
+    args = parse_arguments(sys.argv[1:])
 
     try:
         errors = parse_cppcheck(args.input_file)
@@ -210,7 +210,7 @@ def main() -> ExitStatus:  # pragma: no cover
     tree = JUnitXml("Cppcheck")
     tree.add_testsuite(generate_test_suite(errors))
     tree.write(args.output_file)
-    return args.error_exitcode if len(errors) > 0 else ExitStatus.success
+    return int(args.error_exitcode) if len(errors) > 0 else ExitStatus.success
 
 
 if __name__ == "__main__":  # pragma: no cover
